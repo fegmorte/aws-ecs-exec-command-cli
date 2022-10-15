@@ -63,6 +63,7 @@ def get_task_arn(profile: str, cluster_name: str, service_name: str = ""):
 
 def get_container_name(profile: str, cluster_name: str, task_name: str):
     
+    # Instantiate a list to contain the container_name
     list_container_name = list()
     
     try:
