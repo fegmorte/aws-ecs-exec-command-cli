@@ -26,6 +26,7 @@ Create a virtualenv with python > 3.7
 &nbsp;
 
 ```bash
+source .venv3.7/bin/activate
 pip install -r requirements.txt
 ```
 
