@@ -2,7 +2,7 @@
 
 AWS ECS Exec command cli tool is aimed to connect to your docker instance running under ECS Fargate.
 
-The `aws ecs execute-command` command is quite complicated to memory and the tool give you the ability to parse and retrieve:
+The `aws ecs execute-command` command is quite complicated to remember and the tool give you the ability to parse and retrieve:
 
 - your clusters
 - your services
