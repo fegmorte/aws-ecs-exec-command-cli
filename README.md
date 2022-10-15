@@ -1,4 +1,4 @@
-# aws_ecs_exec_command_cli
+# aws-ecs-exec-command-cli
 
 AWS ECS Exec command cli tool is aimed to connect to your docker instance running under ECS Fargate.
 
