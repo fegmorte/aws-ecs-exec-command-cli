@@ -33,25 +33,28 @@ pip install -r requirements.txt
 ## Usage
 
 ```bash
-❯ python main.py --help
+❯ python -m ecs_connect --help            
 
 
 Welcome in AWS ECS Exec command Cli !
 
+                                                                                                                                                                          
+ Usage: ecs_connect [OPTIONS] COMMAND [ARGS]...                                                                                                                           
+                                                                                                                                                                          
+╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --version             -v        Show the application version and exit.                                                                                               │
+│ --install-completion            Install completion for the current shell.                                                                                              │
+│ --show-completion               Show completion for the current shell, to copy it or customize the installation.                                                       │
+│ --help                          Show this message and exit.                                                                                                            │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Commands ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ get-ecs-connection                                  Connect to an ECS Fargate container                                                                                │
+│ get-logs                                            Tail logs of a selected  ECS container                                                                             │
+│ list-cluster                                        List cluster into an AWS account                                                                                   │
+│ list-service                                        List service(s) into a cluster                                                                                     │
+│ list-task                                           List task(s) into a service into a cluster                                                                         │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
- Usage: main.py [OPTIONS] COMMAND [ARGS]...
-
-╭─ Options ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --install-completion          Install completion for the current shell.                                                                       │
-│ --show-completion             Show completion for the current shell, to copy it or customize the installation.                                │
-│ --help                        Show this message and exit.                                                                                     │
-╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-╭─ Commands ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ get-ecs-connection                                                                                                                            │
-│ list-cluster                                                                                                                                  │
-│ list-service                                                                                                                                  │
-│ list-task                                                                                                                                     │
-╰───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
 ```
 
