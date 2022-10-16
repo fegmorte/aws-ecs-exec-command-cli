@@ -1,6 +1,11 @@
 # aws-ecs-exec-command-cli
 
-AWS ECS Exec command cli tool is aimed to connect to your docker instance running under ECS Fargate.
+AWS ECS Exec command cli tool is aimed to :
+
+- connect to your container instance running under ECS Fargate.
+- tail the log from cloudwatch logs (if you configure a logconfiguration in your task definition)
+
+&nbsp;
 
 The `aws ecs execute-command` command is quite complicated to remember and the tool give you the ability to parse and retrieve:
 
