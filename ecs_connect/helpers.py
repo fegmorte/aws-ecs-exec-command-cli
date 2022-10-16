@@ -1,6 +1,7 @@
 # ecs_connect/helpers.py
 
 from ecs_connect.session import get_ecs_data
+from rich import print
 
 
 def get_cluster_arn(profile: str) -> list:
@@ -113,7 +114,12 @@ def get_log_group(profile: str, container_name: str, task_definition_arn: str) -
     
     for container in log_group_response['taskDefinition']['containerDefinitions']:
         if container['name'] == container_name:
-            return (container['logConfiguration']['options']['awslogs-group'])
+            if 'logConfiguration' in container:
+                return (container['logConfiguration']['options']['awslogs-group'])
+            else:
+                print(f'[red]ERROR: LogConfiguration not found for {container_name} ![/red]')
+                print('Bye Bye !')
+                exit(-1)
 
 
 def get_cluster_name(profile: str) -> list:
