@@ -47,7 +47,7 @@ Welcome in AWS ECS Exec command Cli !
  Usage: ecs_connect [OPTIONS] COMMAND [ARGS]...                                                                                                                                        
                                                                                                                                                                                        
 ╭─ Options ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --version             -v        Show the application's version and exit.                                                                                                            │
+│ --version             -v        Show the application version and exit.                                                                                                              │
 │ --install-completion            Install completion for the current shell.                                                                                                           │
 │ --show-completion               Show completion for the current shell, to copy it or customize the installation.                                                                    │
 │ --help                          Show this message and exit.                                                                                                                         │
