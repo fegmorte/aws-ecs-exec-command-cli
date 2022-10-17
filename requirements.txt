@@ -1,3 +1,4 @@
 boto3==1.24.91
 simple-term-menu==1.5.2
 typer[all]==0.6.1
+pytest==6.2.4
