@@ -13,7 +13,6 @@ from ecs_connect.helpers import get_task_defintion_arn
 from ecs_connect.helpers import get_log_group
 
 from rich import print
-from rich.progress import track
 from typing import Optional
 
 
