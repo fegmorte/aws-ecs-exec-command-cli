@@ -5,7 +5,7 @@ import time
 import typer
 
 from ecs_connect import __app_name__, __version__
-from ecs_connect.choice_menu import make_choice
+from ecs_connect.menu import make_choice
 from ecs_connect.helpers import get_cluster_arn
 from ecs_connect.helpers import get_service_arn
 from ecs_connect.helpers import get_task_arn
