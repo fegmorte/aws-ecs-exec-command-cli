@@ -17,7 +17,6 @@ def display_menu(menu_list: list, menu_title: str = "") -> int:
     Returns:
         int: Index of the choice in the menu
     """
-    # Display the menu with terminal menu
     terminal_menu = TerminalMenu(menu_list, title=f'{menu_title}: \n')
     menu_entry_index = terminal_menu.show()
     

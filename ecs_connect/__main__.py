@@ -1,5 +1,3 @@
-# ecs_connect/__main__.py
-
 from ecs_connect import cli, __app_name__
 
 def main():

@@ -1,5 +1,3 @@
-# ecs_connect/helpers.py
-
 from ecs_connect.session import get_ecs_data
 from rich import print
 

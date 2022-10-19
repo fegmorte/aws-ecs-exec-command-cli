@@ -1,7 +1,4 @@
-# ecs_connect/cli.py
-
 import subprocess
-import time
 import typer
 
 from ecs_connect import __app_name__, __version__
@@ -21,7 +18,6 @@ app = typer.Typer()
 @app.command()
 def list_cluster():
     """List cluster into an AWS account"""
-    # Check and choose credentials
     profile_name = make_choice()
     
     print('Cluster(s) ARN available in your account: ')
@@ -32,10 +28,8 @@ def list_cluster():
 @app.command()
 def list_service():
     """List service(s) into a cluster"""
-    # Check and choose credentials
     profile_name = make_choice()
     
-    # Retrieve the cluster_arn list
     cluster_name = make_choice(profile_name)     
 
     print(f'Service(s) ARN in cluster {cluster_name}: ')
@@ -46,13 +40,10 @@ def list_service():
 @app.command()
 def list_task():
     """List task(s) into a service into a cluster"""
-    # Check and choose credentials
     profile_name = make_choice()
     
-    # Retrieve the cluster_arn list
     cluster_name = make_choice(profile_name)  
     
-    # Retrieve the service_name list
     service_name = make_choice(profile=profile_name, cluster_name=cluster_name)
     
     print(f'Task(s) ARN in cluster {cluster_name} and service {service_name}: ')
@@ -63,19 +54,14 @@ def list_task():
 @app.command('connect')
 def ecs_connect():
     """Connect to an ECS Fargate container"""
-    # Check and choose credentials
     profile_name = make_choice()
     
-    # Retrieve the cluster_arn list
     cluster_name = make_choice(profile_name)  
     
-    # Retrieve the service_name list
     service_name = make_choice(profile=profile_name, cluster_name=cluster_name)
     
-    # Retrieve the task_name list
     task_name = make_choice(profile=profile_name, cluster_name=cluster_name, service_name=service_name)
     
-    # Retrieve the container_name    
     container_name = make_choice(profile=profile_name, cluster_name=cluster_name, task_name=task_name)
     
     print(f'Connection to {container_name} ...')
@@ -86,25 +72,18 @@ def ecs_connect():
 @app.command('tail')
 def tail_logs():
     """Tail logs of a selected  ECS container"""
-    # Check and choose credentials
     profile_name = make_choice()
     
-    # Retrieve the cluster_arn list
     cluster_name = make_choice(profile_name)  
     
-    # Retrieve the service_name list
     service_name = make_choice(profile=profile_name, cluster_name=cluster_name)
     
-    # Retrieve the task_name list
     task_name = make_choice(profile=profile_name, cluster_name=cluster_name, service_name=service_name)
     
-    # Retrieve the container_name    
     container_name = make_choice(profile=profile_name, cluster_name=cluster_name, task_name=task_name)
     
-    # Retrieve the container_name    
     task_defition_arn = get_task_defintion_arn(profile=profile_name, cluster_name=cluster_name, task_name=task_name)
     
-    # Retrive log group to tail the log
     log_group = get_log_group(profile=profile_name, container_name=container_name, task_definition_arn=task_defition_arn)
         
     print(f'Retrieving log for {container_name} ...')

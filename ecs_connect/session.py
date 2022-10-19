@@ -1,5 +1,3 @@
-# ecs_connect/session.py
-
 import boto3
 
 
