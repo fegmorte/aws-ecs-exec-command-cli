@@ -65,7 +65,7 @@ def ecs_connect():
     container_name = make_choice(profile=profile_name, cluster_name=cluster_name, task_name=task_name)
     
     print(f'Connection to {container_name} ...')
-    command = f'aws ecs execute-command --region eu-west-1 --cluster {cluster_name} --task {task_name} --container {container_name} --command "/bin/sh" --interactive --profile {profile_name}'
+    command = f'aws ecs execute-command --region eu-west-1 --cluster {cluster_name} --task {task_name} --container {container_name} --command "/bin/bash" --interactive --profile {profile_name}'
     subprocess.run(command, shell=True)
     
 
