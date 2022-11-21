@@ -22,7 +22,7 @@ To let you choose which one you want to connect into.
 
 **Requirements**
 
-You should have `aws-cli` already installed with credentials file.
+You should install the requirements via the pip install below.
 
 &nbsp;
 
@@ -34,6 +34,12 @@ Create a virtualenv with python > 3.7
 source .venv3.7/bin/activate
 pip install -r requirements.txt
 ```
+
+&nbsp;
+
+if it is the first time you connect to awc-cli, you have to get credentials key from your aws administrator.
+
+&nbsp;
 
 ## Usage
 
