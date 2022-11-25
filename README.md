@@ -22,6 +22,13 @@ To let you choose which one you want to connect into.
 
 **Requirements**
 
+- Install awscli via [https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html]
+
+- Install ssm  tools via [https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html]
+
+
+&nbsp;
+
 You should install the requirements via the pip install below.
 
 &nbsp;
