@@ -91,6 +91,26 @@ def tail_logs():
     subprocess.run(command, shell=True)
     
 
+@app.command('exec_command')
+def exec_command(command: str = typer.Option(..., help=" Command to execute"),
+               output_filename: str = typer.Option(..., help="Filename to output results")):
+    """Execute flow_recap manage.py command with args"""
+    profile_name = make_choice()
+    
+    cluster_name = make_choice(profile_name)  
+    
+    service_name = make_choice(profile=profile_name, cluster_name=cluster_name)
+    
+    task_name = make_choice(profile=profile_name, cluster_name=cluster_name, service_name=service_name)
+    
+    container_name = make_choice(profile=profile_name, cluster_name=cluster_name, task_name=task_name)
+    
+    print(f'Execute {command}')
+    
+    command = f'aws ecs execute-command --region eu-west-1 --cluster {cluster_name} --task {task_name} --container {container_name} --command "{command}" --interactive --profile {profile_name} > {output_filename}'
+    subprocess.run(command, shell=True)
+    
+
 def _version_callback(value: bool) -> None:
     if value:
         typer.echo(f"{__app_name__} v{__version__}")

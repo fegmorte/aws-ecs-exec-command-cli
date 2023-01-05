@@ -153,11 +153,3 @@ def get_service_name(profile: str, cluster_name: str) -> list:
         list_service_name.append(service_arn.partition('/')[2])
         
     return list_service_name
-
-
-
-
-
-
-
-
