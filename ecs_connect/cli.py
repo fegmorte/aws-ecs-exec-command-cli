@@ -91,7 +91,7 @@ def tail_logs():
     subprocess.run(command, shell=True)
     
 
-@app.command('exec_command')
+@app.command('exec-command')
 def exec_command(command: str = typer.Option(..., help=" Command to execute"),
                output_filename: Optional[str] = typer.Option("", help="Filename to output results")):
     """Execute manage.py command with args"""
