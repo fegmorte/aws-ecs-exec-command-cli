@@ -93,8 +93,8 @@ def tail_logs():
 
 @app.command('exec_command')
 def exec_command(command: str = typer.Option(..., help=" Command to execute"),
-               output_filename: str = typer.Option(..., help="Filename to output results")):
-    """Execute flow_recap manage.py command with args"""
+               output_filename: Optional[str] = typer.Option("", help="Filename to output results")):
+    """Execute manage.py command with args"""
     profile_name = make_choice()
     
     cluster_name = make_choice(profile_name)  
@@ -107,7 +107,9 @@ def exec_command(command: str = typer.Option(..., help=" Command to execute"),
     
     print(f'Execute {command}')
     
-    command = f'aws ecs execute-command --region eu-west-1 --cluster {cluster_name} --task {task_name} --container {container_name} --command "{command}" --interactive --profile {profile_name} > {output_filename}'
+    command = f'aws ecs execute-command --region eu-west-1 --cluster {cluster_name} --task {task_name} --container {container_name} --command "{command}" --interactive --profile {profile_name}'
+    if output_filename:
+        command += f'> {output_filename}'
     subprocess.run(command, shell=True)
     
 
