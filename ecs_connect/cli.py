@@ -120,7 +120,9 @@ def ecs_connect():
         )
 
         print(f"Connection to {container_name} ...")
-        command = f'aws ecs execute-command --region eu-west-1 --cluster {cluster_name} --task {task_name} --container {container_name} --command "/bin/bash" --interactive --profile {profile_name}'
+        command = f'aws ecs execute-command --cluster {cluster_name} --task {task_name} --container {container_name} --command "/bin/bash" --interactive'
+        if profile_name != "EC2_INSTANCE_METADATA":
+            command = f"{command} --profile {profile_name}"
         subprocess.run(command, shell=True)
 
     except (KeyboardInterrupt, TypeError) as e:
@@ -170,9 +172,9 @@ def tail_logs():
         )
 
         print(f"Retrieving log for {container_name} ...")
-        command = (
-            f"aws logs tail {log_group} --follow --color=on --profile {profile_name}"
-        )
+        command = f"aws logs tail {log_group} --follow --color=on"
+        if profile_name != "EC2_INSTANCE_METADATA":
+            command = f"{command} --profile {profile_name}"
 
         subprocess.run(command, shell=True)
 
@@ -218,10 +220,11 @@ def exec_command(
         )
 
         print(f"Execute {command}")
-
-        command = f'aws ecs execute-command --region eu-west-1 --cluster {cluster_name} --task {task_name} --container {container_name} --command "{command}" --interactive --profile {profile_name}'
+        command = f'aws ecs execute-command --cluster {cluster_name} --task {task_name} --container {container_name} --command "{command}" --interactive'
+        if profile_name != "EC2_INSTANCE_METADATA":
+            command = f"{command} --profile {profile_name}"
         if output_filename:
-            command += f"> {output_filename}"
+            command = f"{command} > {output_filename}"
         subprocess.run(command, shell=True)
 
     except (KeyboardInterrupt, TypeError) as e:
