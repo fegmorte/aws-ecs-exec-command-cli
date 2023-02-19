@@ -47,6 +47,7 @@ def list_service():
             profile_name = make_choice(choice="profile_name")
         else:
             profile_name = credentials_type
+            os.environ["AWS_DEFAULT_REGION"] = make_choice(choice="region_name")
 
         cluster_name = make_choice(choice="cluster_name", profile=profile_name)
 
@@ -68,6 +69,7 @@ def list_task():
             profile_name = make_choice(choice="profile_name")
         else:
             profile_name = credentials_type
+            os.environ["AWS_DEFAULT_REGION"] = make_choice(choice="region_name")
 
         cluster_name = make_choice(choice="cluster_name", profile=profile_name)
 
@@ -95,6 +97,7 @@ def ecs_connect():
             profile_name = make_choice(choice="profile_name")
         else:
             profile_name = credentials_type
+            os.environ["AWS_DEFAULT_REGION"] = make_choice(choice="region_name")
 
         cluster_name = make_choice(choice="cluster_name", profile=profile_name)
 
@@ -134,6 +137,7 @@ def tail_logs():
             profile_name = make_choice(choice="profile_name")
         else:
             profile_name = credentials_type
+            os.environ["AWS_DEFAULT_REGION"] = make_choice(choice="region_name")
 
         cluster_name = make_choice(choice="cluster_name", profile=profile_name)
 
@@ -191,6 +195,7 @@ def exec_command(
             profile_name = make_choice(choice="profile_name")
         else:
             profile_name = credentials_type
+            os.environ["AWS_DEFAULT_REGION"] = make_choice(choice="region_name")
 
         cluster_name = make_choice(choice="cluster_name", profile=profile_name)
 
