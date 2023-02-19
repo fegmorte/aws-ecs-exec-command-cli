@@ -190,7 +190,7 @@ def exec_command(
         "", help="Filename to output results"
     ),
 ):
-    """Execute manage.py command with args"""
+    """Execute a command with args and optionnal output file"""
     try:
         credentials_type = make_choice(choice="credentials_type")
         if credentials_type == "AWS_CREDENTIALS_FILE":
