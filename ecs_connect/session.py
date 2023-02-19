@@ -1,12 +1,14 @@
 import boto3
 
 
-def get_ecs_data(profile: str = None,
-                cluster_name: str = None, 
-                service_name: str = None,
-                task_name: str = None,
-                task_definition_arn: str = None,
-                action: str = None) -> list:
+def get_ecs_data(
+    profile: str = None,
+    cluster_name: str = None,
+    service_name: str = None,
+    task_name: str = None,
+    task_definition_arn: str = None,
+    action: str = None,
+) -> list:
     """Generic function to call boto3 function to retrieve data from AWS
 
     Args:
@@ -21,43 +23,44 @@ def get_ecs_data(profile: str = None,
         list: JSON response from boto3 call
     """
     try:
-        session = boto3.Session(profile_name=profile)
-        ecs_client = session.client('ecs')
-        
-        if action == 'list_clusters':
-            response = ecs_client.list_clusters(
-                maxResults = 10
-            )
-        
-        if action == 'list_services':
+        if profile == "EC2_INSTANCE_METADATA":
+            session = boto3.Session()
+        else:
+            session = boto3.Session(profile_name=profile)
+        ecs_client = session.client("ecs")
+
+        if action == "list_clusters":
+            response = ecs_client.list_clusters(maxResults=10)
+
+        if action == "list_services":
             response = ecs_client.list_services(
-                cluster     = cluster_name, 
-                maxResults  = 50, 
-                launchType  = "FARGATE",
+                cluster=cluster_name,
+                maxResults=50,
+                launchType="FARGATE",
             )
-        
-        if action == 'list_tasks':
+
+        if action == "list_tasks":
             response = ecs_client.list_tasks(
-                cluster     = cluster_name, 
-                maxResults  = 100, 
-                serviceName = service_name,
+                cluster=cluster_name,
+                maxResults=100,
+                serviceName=service_name,
             )
-        
-        if action == 'describe_tasks':
+
+        if action == "describe_tasks":
             response = ecs_client.describe_tasks(
-                cluster     = cluster_name, 
-                tasks       = [
+                cluster=cluster_name,
+                tasks=[
                     task_name,
-                    ]
+                ],
             )
-                        
-        if action == 'describe_task_definition':
+
+        if action == "describe_task_definition":
             response = ecs_client.describe_task_definition(
-                taskDefinition = task_definition_arn,
+                taskDefinition=task_definition_arn,
             )
 
     except Exception as Err:
-        print(f'ERROR: {Err}')
+        print(f"ERROR: {Err}")
         exit(-1)
-        
+
     return response

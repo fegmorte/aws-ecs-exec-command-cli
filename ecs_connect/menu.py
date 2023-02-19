@@ -1,4 +1,5 @@
 from ecs_connect.credentials import check_credentials
+from ecs_connect.credentials import which_credentials
 from ecs_connect.helpers import get_cluster_name
 from ecs_connect.helpers import get_container_name
 from ecs_connect.helpers import get_service_name
@@ -17,16 +18,19 @@ def display_menu(menu_list: list, menu_title: str = "") -> int:
     Returns:
         int: Index of the choice in the menu
     """
-    terminal_menu = TerminalMenu(menu_list, title=f'{menu_title}: \n')
+    terminal_menu = TerminalMenu(menu_list, title=f"{menu_title}: \n")
     menu_entry_index = terminal_menu.show()
-    
+
     return menu_entry_index
 
 
-def make_choice(profile: str = None, 
-                cluster_name: str = None, 
-                service_name: str = None,
-                task_name: str = None) -> str:
+def make_choice(
+    choice: str = None,
+    profile: str = None,
+    cluster_name: str = None,
+    service_name: str = None,
+    task_name: str = None,
+) -> str:
     """Generic function to make choice in a list displayed
 
     Args:
@@ -38,33 +42,40 @@ def make_choice(profile: str = None,
     Returns:
         str: String of the choice in the menu
     """
-        
-    # choose_container
-    if profile and cluster_name and task_name:
-        list_results = get_container_name(profile, cluster_name, task_name.partition('/')[2].partition('/')[2])
-        menu_title='Choose the container to connect'
-    
-    #choose_task
-    elif profile and cluster_name and service_name:
-        list_results = get_task_arn(profile, cluster_name, service_name)
-        menu_title='Choose the task to list container from'
 
-    # choose_service    
-    elif profile and cluster_name:
+    # choose_container
+    if choice == "container_name":
+        list_results = get_container_name(
+            profile, cluster_name, task_name.partition("/")[2].partition("/")[2]
+        )
+        menu_title = "Choose the container to connect"
+
+    # choose_task
+    elif choice == "task_arn":
+        list_results = get_task_arn(profile, cluster_name, service_name)
+        menu_title = "Choose the task to list container from"
+
+    # choose_service
+    elif choice == "service_name":
         list_results = get_service_name(profile, cluster_name)
-        menu_title='Choose the service to list task from'
-    
-    # choose_cluster 
-    elif profile:
+        menu_title = "Choose the service to list task from"
+
+    # choose_cluster
+    elif choice == "cluster_name":
         list_results = get_cluster_name(profile)
-        menu_title='Choose the cluster to list service from'
+        menu_title = "Choose the cluster to list service from"
 
     # choose_credentials_profile
-    else:
+    elif choice == "profile_name":
         list_results = check_credentials()
-        menu_title='Choose the credentials to use'
-    
+        menu_title = "Choose the credentials to use"
+
+    # choose which type of credentials to use
+    elif choice == "credentials_type":
+        list_results = which_credentials()
+        menu_title = "Which type of credentials would you use"
+
     # Display the menu
-    index_menu = display_menu(list_results, menu_title = menu_title)
-    
+    index_menu = display_menu(list_results, menu_title=menu_title)
+
     return list_results[index_menu]
