@@ -16,6 +16,11 @@ The `aws ecs execute-command` command is quite complicated to remember and the t
 
 To let you choose which one you want to connect into.
 
+** NEW ** 
+You can now connect to ECS and tail your logs from an EC2 instance without the need of aws cli and aws credentials file.
+
+At start, you are asked  what kind of credentials you want to use and which default region.
+
 &nbsp;
 
 ## Installation
@@ -59,19 +64,20 @@ Welcome in AWS ECS Exec command Cli !
                                                                                                                                                                                        
  Usage: ecs_connect [OPTIONS] COMMAND [ARGS]...                                                                                                                                        
                                                                                                                                                                                        
-╭─ Options ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --version             -v        Show the application version and exit.                                                                                                              │
-│ --install-completion            Install completion for the current shell.                                                                                                           │
-│ --show-completion               Show completion for the current shell, to copy it or customize the installation.                                                                    │
-│ --help                          Show this message and exit.                                                                                                                         │
-╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-╭─ Commands ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ connect                                    Connect to an ECS Fargate container                                                                                                      │
-│ list-cluster                               List cluster into an AWS account                                                                                                         │
-│ list-service                               List service(s) into a cluster                                                                                                           │
-│ list-task                                  List task(s) into a service into a cluster                                                                                               │
-│ tail                                       Tail logs of a selected  ECS container                                                                                                   │
-╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --version             -v        Show the application's version and exit.                                                                   │
+│ --install-completion            Install completion for the current shell.                                                                  │
+│ --show-completion               Show completion for the current shell, to copy it or customize the installation.                           │
+│ --help                          Show this message and exit.                                                                                │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Commands ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ connect                           Connect to an ECS Fargate container                                                                      │
+│ exec-command                      Execute manage.py command with args                                                                      │
+│ list-cluster                      List cluster into an AWS account                                                                         │
+│ list-service                      List service(s) into a cluster                                                                           │
+│ list-task                         List task(s) into a service into a cluster                                                               │
+│ tail                              Tail logs of a selected  ECS container                                                                   │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
 ```
 
