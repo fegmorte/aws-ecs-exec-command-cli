@@ -16,10 +16,10 @@ The `aws ecs execute-command` command is quite complicated to remember and the t
 
 To let you choose which one you want to connect into.
 
-** NEW ** 
-You can now connect to ECS and tail your logs from an EC2 instance without the need of aws cli and aws credentials file.
+**Enhancements** 
+You can now connect to ECS and tail your logs from an EC2 instance or AWS CloudShell without the need of aws cli and aws credentials file.
 
-At start, you are asked  what kind of credentials you want to use and which default region.
+At start, you are asked what kind of credentials you want to use and which default region.
 
 &nbsp;
 
@@ -27,7 +27,8 @@ At start, you are asked  what kind of credentials you want to use and which defa
 
 **Requirements**
 
-- Install awscli via [https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html]
+
+- Install awscli via [https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html] (not necessary if you are connected to an EC2 instance)
 
 - Install ssm  tools via [https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html]
 
@@ -49,7 +50,7 @@ pip install -r requirements.txt
 
 &nbsp;
 
-if it is the first time you connect to awc-cli, you have to get credentials key from your aws administrator.
+if it is the first time you connect to aws-cli, you have to get credentials key from your aws administrator.
 
 &nbsp;
 
