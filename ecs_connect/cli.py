@@ -1,3 +1,4 @@
+import os
 import sys
 import subprocess
 import typer
@@ -26,6 +27,7 @@ def list_cluster():
             profile_name = make_choice(choice="profile_name")
         else:
             profile_name = credentials_type
+            os.environ["AWS_DEFAULT_REGION"] = make_choice(choice="region_name")
 
         print("Cluster(s) ARN available in your account: ")
         for cluster_arn in get_cluster_arn(profile_name):

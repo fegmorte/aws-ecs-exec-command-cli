@@ -1,5 +1,6 @@
 from ecs_connect.credentials import check_credentials
 from ecs_connect.credentials import which_credentials
+from ecs_connect.credentials import which_region
 from ecs_connect.helpers import get_cluster_name
 from ecs_connect.helpers import get_container_name
 from ecs_connect.helpers import get_service_name
@@ -74,6 +75,11 @@ def make_choice(
     elif choice == "credentials_type":
         list_results = which_credentials()
         menu_title = "Which type of credentials would you use"
+
+    # choose which region to use
+    elif choice == "region_name":
+        list_results = which_region()
+        menu_title = "Choose the default AWS region to use"
 
     # Display the menu
     index_menu = display_menu(list_results, menu_title=menu_title)

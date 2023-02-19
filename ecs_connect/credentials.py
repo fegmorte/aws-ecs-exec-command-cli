@@ -1,3 +1,4 @@
+import boto3
 import configparser
 import os
 
@@ -7,11 +8,22 @@ from rich.prompt import Prompt
 from rich import print
 
 
+def which_region() -> list:
+    """Define which region you want to use
+
+    Returns:
+        list: List of AWS region available
+    """
+    client = boto3.client("ec2", region_name="us-west-2")
+    regions = [region["RegionName"] for region in client.describe_regions()["Regions"]]
+    return regions
+
+
 def which_credentials() -> list:
     """Define which type of credentials you want to use
 
     Returns:
-        str: Type of credentials, only two answers allowed
+        list: Type of credentials, only two answers allowed
                 - EC2_INSTANCE_METADATA
                 - AWS_CREDENTIALS_FILE
     """
