@@ -1,3 +1,4 @@
+import configparser
 import os
 import sys
 import subprocess
@@ -92,38 +93,68 @@ def list_task():
 def ecs_connect():
     """Connect to an ECS Fargate container"""
     try:
-        credentials_type = make_choice(choice="credentials_type")
-        if credentials_type == "AWS_CREDENTIALS_FILE":
-            profile_name = make_choice(choice="profile_name")
-        else:
-            profile_name = credentials_type
-            os.environ["AWS_DEFAULT_REGION"] = make_choice(choice="region_name")
+        # Check if last config exists
+        if os.path.isfile("config.ini"):
+            use_last_config = make_choice(choice="use_last_config")
+            if use_last_config == "Y":
+                config = configparser.ConfigParser()
+                config.read("config.ini")
+                cluster_name = config["DEFAULT"]["cluster_name"]
+                task_name = config["DEFAULT"]["task_name"]
+                container_name = config["DEFAULT"]["container_name"]
+                profile_name = config["DEFAULT"]["profile_name"]
+                command = f'aws ecs execute-command --cluster {cluster_name} --task {task_name} --container {container_name} --command "/bin/bash" --interactive --profile {profile_name}'
+                subprocess.run(command, shell=True)
 
-        cluster_name = make_choice(choice="cluster_name", profile=profile_name)
+        if (os.path.isfile("config.ini") == True and use_last_config == "N") or (
+            os.path.isfile("config.ini") is False
+        ):
+            credentials_type = make_choice(choice="credentials_type")
+            if credentials_type == "AWS_CREDENTIALS_FILE":
+                profile_name = make_choice(choice="profile_name")
+            else:
+                profile_name = credentials_type
+                os.environ["AWS_DEFAULT_REGION"] = make_choice(choice="region_name")
 
-        service_name = make_choice(
-            choice="service_name", profile=profile_name, cluster_name=cluster_name
-        )
+            cluster_name = make_choice(choice="cluster_name", profile=profile_name)
 
-        task_name = make_choice(
-            choice="task_arn",
-            profile=profile_name,
-            cluster_name=cluster_name,
-            service_name=service_name,
-        )
+            service_name = make_choice(
+                choice="service_name", profile=profile_name, cluster_name=cluster_name
+            )
 
-        container_name = make_choice(
-            choice="container_name",
-            profile=profile_name,
-            cluster_name=cluster_name,
-            task_name=task_name,
-        )
+            task_name = make_choice(
+                choice="task_arn",
+                profile=profile_name,
+                cluster_name=cluster_name,
+                service_name=service_name,
+            )
 
-        print(f"Connection to {container_name} ...")
-        command = f'aws ecs execute-command --cluster {cluster_name} --task {task_name} --container {container_name} --command "/bin/bash" --interactive'
-        if profile_name != "EC2_INSTANCE_METADATA":
-            command = f"{command} --profile {profile_name}"
-        subprocess.run(command, shell=True)
+            container_name = make_choice(
+                choice="container_name",
+                profile=profile_name,
+                cluster_name=cluster_name,
+                task_name=task_name,
+            )
+
+            print(f"Connection to {container_name} ...")
+            command = f'aws ecs execute-command --cluster {cluster_name} --task {task_name} --container {container_name} --command "/bin/bash" --interactive'
+
+            config = configparser.ConfigParser()
+            config["DEFAULT"] = {
+                "cluster_name": f"{cluster_name}",
+                "task_name": f"{task_name}",
+                "container_name": f"{container_name}",
+            }
+            with open("config.ini", "w") as configfile:
+                config.write(configfile)
+
+            if profile_name != "EC2_INSTANCE_METADATA":
+                command = f"{command} --profile {profile_name}"
+                config["DEFAULT"]["profile_name"] = f"{profile_name}"
+                with open("config.ini", "w") as configfile:
+                    config.write(configfile)
+
+            subprocess.run(command, shell=True)
 
     except (KeyboardInterrupt, TypeError) as e:
         print("Bye bye !")

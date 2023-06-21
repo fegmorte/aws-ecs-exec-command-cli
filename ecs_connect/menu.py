@@ -44,6 +44,13 @@ def make_choice(
         str: String of the choice in the menu
     """
 
+    # use_last_config
+    if choice == "use_last_config":
+        with open("config.ini", "r") as config:
+            print(config.read())
+        list_results = ["Y", "N"]
+        menu_title = "Do you want to use last config ?"
+
     # choose_container
     if choice == "container_name":
         list_results = get_container_name(
