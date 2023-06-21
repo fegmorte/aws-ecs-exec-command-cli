@@ -30,7 +30,7 @@ def get_ecs_data(
         ecs_client = session.client("ecs")
 
         if action == "list_clusters":
-            response = ecs_client.list_clusters(maxResults=10)
+            response = ecs_client.list_clusters(maxResults=20)
 
         if action == "list_services":
             response = ecs_client.list_services(
