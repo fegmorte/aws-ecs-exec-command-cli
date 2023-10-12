@@ -39,12 +39,12 @@ You should install the requirements via the pip install below.
 
 &nbsp;
 
-Create a virtualenv with python > 3.7
+Create a virtualenv with python >= 3.9
 
 &nbsp;
 
 ```bash
-source .venv3.7/bin/activate
+source .venv_3.11.0/bin/activate
 pip install -r requirements.txt
 ```
 
@@ -86,4 +86,4 @@ Welcome in AWS ECS Exec command Cli !
 
 Thanks to Typer from [@tiangolo](https://typer.tiangolo.com/)
 
-Thanks to simple-term-menu [@IngoMeyer441](https://github.com/IngoMeyer441/simple-term-menu)
+Thanks to [@kraymer](https://github.com/kraymer) for echoprompt :sunglasses:
