@@ -5,6 +5,7 @@ import subprocess
 import time
 import typer
 
+from echoprompt import EchoPrompt
 from ecs_connect import __app_name__, __version__
 from ecs_connect.menu import make_choice
 from ecs_connect.helpers import get_cluster_arn
@@ -18,6 +19,7 @@ from typing import Optional
 
 
 app = typer.Typer()
+prompt = EchoPrompt("ecs-connect")
 
 
 @app.command()
@@ -93,18 +95,35 @@ def list_task():
 @app.command("connect")
 def ecs_connect():
     """Connect to an ECS Fargate container"""
-    try:
-        credentials_type = make_choice(choice="credentials_type")
+
+    credentials_type = prompt.prompt_choice(
+        "credentials_type", choices=("EC2_INSTANCE_METADATA", "AWS_CREDENTIALS_FILE")
+    )
+    if credentials_type:
+        profile_name = credentials_type
         if credentials_type == "AWS_CREDENTIALS_FILE":
-            profile_name = make_choice(choice="profile_name")
+            profile_name = prompt.prompt_choice(
+                "profile_name", choices=make_choice(choice="profile_name")
+            )
+
         else:
-            profile_name = credentials_type
-            os.environ["AWS_DEFAULT_REGION"] = make_choice(choice="region_name")
+            region = prompt.prompt_choice(
+                "region", choices=make_choice(choice="region")
+            )
+            if region:
+                os.environ["AWS_DEFAULT_REGION"] = region
 
-        cluster_name = make_choice(choice="cluster_name", profile=profile_name)
+    try:
+        cluster_name = prompt.prompt_choice(
+            "cluster_name",
+            choices=make_choice(choice="cluster_name", profile=profile_name),
+        )
 
-        service_name = make_choice(
-            choice="service_name", profile=profile_name, cluster_name=cluster_name
+        service_name = prompt.prompt_choice(
+            "service_name",
+            choices=make_choice(
+                choice="service_name", profile=profile_name, cluster_name=cluster_name
+            ),
         )
 
         task_name = make_choice(
@@ -112,14 +131,14 @@ def ecs_connect():
             profile=profile_name,
             cluster_name=cluster_name,
             service_name=service_name,
-        )
+        )[0]
 
         container_name = make_choice(
             choice="container_name",
             profile=profile_name,
             cluster_name=cluster_name,
             task_name=task_name,
-        )
+        )[0]
 
         print(f"Connection to {container_name} ...")
         command = f'aws ecs execute-command --cluster {cluster_name} --task {task_name} --container {container_name} --command "/bin/bash" --interactive'
