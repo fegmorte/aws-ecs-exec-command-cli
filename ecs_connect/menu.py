@@ -6,24 +6,6 @@ from ecs_connect.helpers import get_container_name
 from ecs_connect.helpers import get_service_name
 from ecs_connect.helpers import get_task_arn
 
-from simple_term_menu import TerminalMenu
-
-
-def display_menu(menu_list: list, menu_title: str = "") -> int:
-    """Display menu and retrieve the index of thechoice
-
-    Args:
-        menu_list (list): list of choice to display
-        menu_title (str, optional): title to display for selection. Defaults to "".
-
-    Returns:
-        int: Index of the choice in the menu
-    """
-    terminal_menu = TerminalMenu(menu_list, title=f"{menu_title}: \n")
-    menu_entry_index = terminal_menu.show()
-
-    return menu_entry_index
-
 
 def make_choice(
     choice: str = None,
@@ -43,6 +25,8 @@ def make_choice(
     Returns:
         str: String of the choice in the menu
     """
+
+    list_results = ""
 
     # choose_container
     if choice == "container_name":

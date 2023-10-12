@@ -1,5 +1,4 @@
 import os
-import multiprocessing
 import sys
 import subprocess
 import time
@@ -26,12 +25,23 @@ prompt = EchoPrompt("ecs-connect")
 def list_cluster():
     """List cluster into an AWS account"""
     try:
-        credentials_type = make_choice(choice="credentials_type")
-        if credentials_type == "AWS_CREDENTIALS_FILE":
-            profile_name = make_choice(choice="profile_name")
-        else:
+        credentials_type = prompt.prompt_choice(
+            "credentials_type",
+            choices=("EC2_INSTANCE_METADATA", "AWS_CREDENTIALS_FILE"),
+        )
+        if credentials_type:
             profile_name = credentials_type
-            os.environ["AWS_DEFAULT_REGION"] = make_choice(choice="region_name")
+            if credentials_type == "AWS_CREDENTIALS_FILE":
+                profile_name = prompt.prompt_choice(
+                    "profile_name", choices=make_choice(choice="profile_name")
+                )
+
+            else:
+                region = prompt.prompt_choice(
+                    "region", choices=make_choice(choice="region")
+                )
+                if region:
+                    os.environ["AWS_DEFAULT_REGION"] = region
 
         print("Cluster(s) ARN available in your account: ")
         for cluster_arn in get_cluster_arn(profile_name):
@@ -45,15 +55,30 @@ def list_cluster():
 @app.command()
 def list_service():
     """List service(s) into a cluster"""
-    try:
-        credentials_type = make_choice(choice="credentials_type")
-        if credentials_type == "AWS_CREDENTIALS_FILE":
-            profile_name = make_choice(choice="profile_name")
-        else:
-            profile_name = credentials_type
-            os.environ["AWS_DEFAULT_REGION"] = make_choice(choice="region_name")
 
-        cluster_name = make_choice(choice="cluster_name", profile=profile_name)
+    try:
+        credentials_type = prompt.prompt_choice(
+            "credentials_type",
+            choices=("EC2_INSTANCE_METADATA", "AWS_CREDENTIALS_FILE"),
+        )
+        if credentials_type:
+            profile_name = credentials_type
+            if credentials_type == "AWS_CREDENTIALS_FILE":
+                profile_name = prompt.prompt_choice(
+                    "profile_name", choices=make_choice(choice="profile_name")
+                )
+
+            else:
+                region = prompt.prompt_choice(
+                    "region", choices=make_choice(choice="region")
+                )
+                if region:
+                    os.environ["AWS_DEFAULT_REGION"] = region
+
+        cluster_name = prompt.prompt_choice(
+            "cluster_name",
+            choices=make_choice(choice="cluster_name", profile=profile_name),
+        )
 
         print(f"Service(s) ARN in cluster {cluster_name}: ")
         for service_arn in get_service_arn(profile_name, cluster_name):
@@ -68,17 +93,34 @@ def list_service():
 def list_task():
     """List task(s) into a service into a cluster"""
     try:
-        credentials_type = make_choice(choice="credentials_type")
-        if credentials_type == "AWS_CREDENTIALS_FILE":
-            profile_name = make_choice(choice="profile_name")
-        else:
+        credentials_type = prompt.prompt_choice(
+            "credentials_type",
+            choices=("EC2_INSTANCE_METADATA", "AWS_CREDENTIALS_FILE"),
+        )
+        if credentials_type:
             profile_name = credentials_type
-            os.environ["AWS_DEFAULT_REGION"] = make_choice(choice="region_name")
+            if credentials_type == "AWS_CREDENTIALS_FILE":
+                profile_name = prompt.prompt_choice(
+                    "profile_name", choices=make_choice(choice="profile_name")
+                )
 
-        cluster_name = make_choice(choice="cluster_name", profile=profile_name)
+            else:
+                region = prompt.prompt_choice(
+                    "region", choices=make_choice(choice="region")
+                )
+                if region:
+                    os.environ["AWS_DEFAULT_REGION"] = region
 
-        service_name = make_choice(
-            choice="service_name", profile=profile_name, cluster_name=cluster_name
+        cluster_name = prompt.prompt_choice(
+            "cluster_name",
+            choices=make_choice(choice="cluster_name", profile=profile_name),
+        )
+
+        service_name = prompt.prompt_choice(
+            "service_name",
+            choices=make_choice(
+                choice="service_name", profile=profile_name, cluster_name=cluster_name
+            ),
         )
 
         print(f"Task(s) ARN in cluster {cluster_name} and service {service_name}: ")
@@ -96,24 +138,25 @@ def list_task():
 def ecs_connect():
     """Connect to an ECS Fargate container"""
 
-    credentials_type = prompt.prompt_choice(
-        "credentials_type", choices=("EC2_INSTANCE_METADATA", "AWS_CREDENTIALS_FILE")
-    )
-    if credentials_type:
-        profile_name = credentials_type
-        if credentials_type == "AWS_CREDENTIALS_FILE":
-            profile_name = prompt.prompt_choice(
-                "profile_name", choices=make_choice(choice="profile_name")
-            )
-
-        else:
-            region = prompt.prompt_choice(
-                "region", choices=make_choice(choice="region")
-            )
-            if region:
-                os.environ["AWS_DEFAULT_REGION"] = region
-
     try:
+        credentials_type = prompt.prompt_choice(
+            "credentials_type",
+            choices=("EC2_INSTANCE_METADATA", "AWS_CREDENTIALS_FILE"),
+        )
+        if credentials_type:
+            profile_name = credentials_type
+            if credentials_type == "AWS_CREDENTIALS_FILE":
+                profile_name = prompt.prompt_choice(
+                    "profile_name", choices=make_choice(choice="profile_name")
+                )
+
+            else:
+                region = prompt.prompt_choice(
+                    "region", choices=make_choice(choice="region")
+                )
+                if region:
+                    os.environ["AWS_DEFAULT_REGION"] = region
+
         cluster_name = prompt.prompt_choice(
             "cluster_name",
             choices=make_choice(choice="cluster_name", profile=profile_name),
@@ -126,19 +169,25 @@ def ecs_connect():
             ),
         )
 
-        task_name = make_choice(
-            choice="task_arn",
-            profile=profile_name,
-            cluster_name=cluster_name,
-            service_name=service_name,
-        )[0]
+        task_name = prompt.prompt_choice(
+            "task_arn",
+            choices=make_choice(
+                choice="task_arn",
+                profile=profile_name,
+                cluster_name=cluster_name,
+                service_name=service_name,
+            ),
+        )
 
-        container_name = make_choice(
-            choice="container_name",
-            profile=profile_name,
-            cluster_name=cluster_name,
-            task_name=task_name,
-        )[0]
+        container_name = prompt.prompt_choice(
+            "container_name",
+            choices=make_choice(
+                choice="container_name",
+                profile=profile_name,
+                cluster_name=cluster_name,
+                task_name=task_name,
+            ),
+        )
 
         print(f"Connection to {container_name} ...")
         command = f'aws ecs execute-command --cluster {cluster_name} --task {task_name} --container {container_name} --command "/bin/bash" --interactive'
@@ -157,31 +206,54 @@ def ecs_connect():
 def tail_logs():
     """Tail logs of a selected  ECS container"""
     try:
-        credentials_type = make_choice(choice="credentials_type")
-        if credentials_type == "AWS_CREDENTIALS_FILE":
-            profile_name = make_choice(choice="profile_name")
-        else:
+        credentials_type = prompt.prompt_choice(
+            "credentials_type",
+            choices=("EC2_INSTANCE_METADATA", "AWS_CREDENTIALS_FILE"),
+        )
+        if credentials_type:
             profile_name = credentials_type
-            os.environ["AWS_DEFAULT_REGION"] = make_choice(choice="region_name")
+            if credentials_type == "AWS_CREDENTIALS_FILE":
+                profile_name = prompt.prompt_choice(
+                    "profile_name", choices=make_choice(choice="profile_name")
+                )
 
-        cluster_name = make_choice(choice="cluster_name", profile=profile_name)
+            else:
+                region = prompt.prompt_choice(
+                    "region", choices=make_choice(choice="region")
+                )
+                if region:
+                    os.environ["AWS_DEFAULT_REGION"] = region
 
-        service_name = make_choice(
-            choice="service_name", profile=profile_name, cluster_name=cluster_name
+        cluster_name = prompt.prompt_choice(
+            "cluster_name",
+            choices=make_choice(choice="cluster_name", profile=profile_name),
         )
 
-        task_name = make_choice(
-            choice="task_arn",
-            profile=profile_name,
-            cluster_name=cluster_name,
-            service_name=service_name,
+        service_name = prompt.prompt_choice(
+            "service_name",
+            choices=make_choice(
+                choice="service_name", profile=profile_name, cluster_name=cluster_name
+            ),
         )
 
-        container_name = make_choice(
-            choice="container_name",
-            profile=profile_name,
-            cluster_name=cluster_name,
-            task_name=task_name,
+        task_name = prompt.prompt_choice(
+            "task_arn",
+            choices=make_choice(
+                choice="task_arn",
+                profile=profile_name,
+                cluster_name=cluster_name,
+                service_name=service_name,
+            ),
+        )
+
+        container_name = prompt.prompt_choice(
+            "container_name",
+            choices=make_choice(
+                choice="container_name",
+                profile=profile_name,
+                cluster_name=cluster_name,
+                task_name=task_name,
+            ),
         )
 
         task_defition_arn = get_task_defintion_arn(
@@ -215,31 +287,54 @@ def exec_command(
 ):
     """Execute a command with args and optionnal output file"""
     try:
-        credentials_type = make_choice(choice="credentials_type")
-        if credentials_type == "AWS_CREDENTIALS_FILE":
-            profile_name = make_choice(choice="profile_name")
-        else:
+        credentials_type = prompt.prompt_choice(
+            "credentials_type",
+            choices=("EC2_INSTANCE_METADATA", "AWS_CREDENTIALS_FILE"),
+        )
+        if credentials_type:
             profile_name = credentials_type
-            os.environ["AWS_DEFAULT_REGION"] = make_choice(choice="region_name")
+            if credentials_type == "AWS_CREDENTIALS_FILE":
+                profile_name = prompt.prompt_choice(
+                    "profile_name", choices=make_choice(choice="profile_name")
+                )
 
-        cluster_name = make_choice(choice="cluster_name", profile=profile_name)
+            else:
+                region = prompt.prompt_choice(
+                    "region", choices=make_choice(choice="region")
+                )
+                if region:
+                    os.environ["AWS_DEFAULT_REGION"] = region
 
-        service_name = make_choice(
-            choice="service_name", profile=profile_name, cluster_name=cluster_name
+        cluster_name = prompt.prompt_choice(
+            "cluster_name",
+            choices=make_choice(choice="cluster_name", profile=profile_name),
         )
 
-        task_name = make_choice(
-            choice="task_arn",
-            profile=profile_name,
-            cluster_name=cluster_name,
-            service_name=service_name,
+        service_name = prompt.prompt_choice(
+            "service_name",
+            choices=make_choice(
+                choice="service_name", profile=profile_name, cluster_name=cluster_name
+            ),
         )
 
-        container_name = make_choice(
-            choice="container_name",
-            profile=profile_name,
-            cluster_name=cluster_name,
-            task_name=task_name,
+        task_name = prompt.prompt_choice(
+            "task_arn",
+            choices=make_choice(
+                choice="task_arn",
+                profile=profile_name,
+                cluster_name=cluster_name,
+                service_name=service_name,
+            ),
+        )
+
+        container_name = prompt.prompt_choice(
+            "container_name",
+            choices=make_choice(
+                choice="container_name",
+                profile=profile_name,
+                cluster_name=cluster_name,
+                task_name=task_name,
+            ),
         )
 
         print(f"Execute {command}")
