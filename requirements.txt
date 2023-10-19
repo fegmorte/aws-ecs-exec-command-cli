@@ -2,4 +2,4 @@ boto3==1.26.13
 simple-term-menu==1.5.2
 typer[all]==0.6.1
 pytest==6.2.4
-echoprompt==0.1.0
+echoprompt==0.2.0
