@@ -4,6 +4,7 @@ AWS ECS Exec command cli tool is aimed to :
 
 - connect to your container instance running under ECS Fargate.
 - tail the log from cloudwatch logs (if you configure a logconfiguration in your task definition)
+- update secret value into secret manager
 
 &nbsp;
 
@@ -20,6 +21,12 @@ To let you choose which one you want to connect into.
 You can now connect to ECS and tail your logs from an EC2 instance or AWS CloudShell without the need of aws cli and aws credentials file.
 
 At start, you are asked what kind of credentials you want to use and which default region.
+
+You can now also update your secret directly from the command line.
+
+```bash
+❯ python -m ecs_connect update-secret your-secret-name
+```
 
 &nbsp;
 
