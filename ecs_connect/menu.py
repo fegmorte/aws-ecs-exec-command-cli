@@ -56,6 +56,6 @@ def make_choice(
 
     # choose which region to use
     elif choice == "region_name":
-        list_results = which_region()
+        list_results = which_region()    
 
     return list_results

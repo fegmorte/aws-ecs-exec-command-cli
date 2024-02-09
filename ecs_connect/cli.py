@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 import subprocess
@@ -12,9 +13,14 @@ from ecs_connect.helpers import get_service_arn
 from ecs_connect.helpers import get_task_arn
 from ecs_connect.helpers import get_task_defintion_arn
 from ecs_connect.helpers import get_log_group
+from ecs_connect.helpers import get_secret_value
+from ecs_connect.helpers import edit_secret_value
+from ecs_connect.helpers import update_secret_string
 
+from deepdiff import DeepDiff
 from rich import print
 from typing import Optional
+from typing_extensions import Annotated
 
 
 app = typer.Typer()
@@ -344,6 +350,74 @@ def exec_command(
         if output_filename:
             command = f"{command} > {output_filename}"
         subprocess.run(command, shell=True)
+
+    except (KeyboardInterrupt, TypeError) as e:
+        try:
+            time.sleep(2)
+        except (KeyboardInterrupt, TypeError) as e:
+            print("Bye bye !")
+            sys.exit()
+        else:
+            pass
+
+
+@app.command("update-secret")
+def update_secret(secret_name: Annotated[str, typer.Argument()]):
+    """Update secret from secret manager"""
+    try:
+        credentials_type = prompt.prompt_choice(
+            "credentials_type",
+            choices=("EC2_INSTANCE_METADATA", "AWS_CREDENTIALS_FILE"),
+        )
+        if credentials_type:
+            profile_name = credentials_type
+            if credentials_type == "AWS_CREDENTIALS_FILE":
+                profile_name = prompt.prompt_choice(
+                    "profile_name", choices=make_choice(choice="profile_name")
+                )
+
+            else:
+                region = prompt.prompt_choice(
+                    "region", choices=make_choice(choice="region")
+                )
+                if region:
+                    os.environ["AWS_DEFAULT_REGION"] = region
+
+        # Retrieve secret string value
+        initial_secret_value = get_secret_value(
+            profile=profile_name, secret_name=secret_name
+        )
+
+        # Edit the secret value as a temporary file
+        try:
+            original_file_md5, final_file_md5, updated_secret_string = (
+                edit_secret_value(secret_value=json.loads(initial_secret_value))
+            )
+        except Exception as Err:
+            print(f"ERROR: {Err}")
+            exit(-1)
+
+        # Check if the file has been modified.
+        if original_file_md5 != final_file_md5:
+            diff = DeepDiff(initial_secret_value, updated_secret_string)
+            print(diff)
+            confirmation_choice = prompt.prompt_choice(
+                "Confirm the update ?",
+                choices=("YES", "NO"),
+            )
+
+            if confirmation_choice == "YES":
+                response = update_secret_string(
+                    profile=profile_name,
+                    secret_name=secret_name,
+                    secret_string=updated_secret_string,
+                )
+                if response["ResponseMetadata"]["HTTPStatusCode"] == 200:
+                    print(f"The secret {secret_name} has been successfully updated.")
+                else:
+                    print("Secret update canceled !")
+        else:
+            print(f"The secret {secret_name} has not been updated.")
 
     except (KeyboardInterrupt, TypeError) as e:
         try:

@@ -1,8 +1,9 @@
 import boto3
 
 
-def get_ecs_data(
+def get_session(
     profile: str = None,
+    resource: str = None,
     cluster_name: str = None,
     service_name: str = None,
     task_name: str = None,
@@ -27,38 +28,43 @@ def get_ecs_data(
             session = boto3.Session()
         else:
             session = boto3.Session(profile_name=profile)
-        ecs_client = session.client("ecs")
+        
+        client = session.client(resource)
+        
+        if resource == "ecs":
+            if action == "list_clusters":
+                response = client.list_clusters(maxResults=20)
 
-        if action == "list_clusters":
-            response = ecs_client.list_clusters(maxResults=20)
+            if action == "list_services":
+                response = client.list_services(
+                    cluster=cluster_name,
+                    maxResults=50,
+                    launchType="FARGATE",
+                )
 
-        if action == "list_services":
-            response = ecs_client.list_services(
-                cluster=cluster_name,
-                maxResults=50,
-                launchType="FARGATE",
-            )
+            if action == "list_tasks":
+                response = client.list_tasks(
+                    cluster=cluster_name,
+                    maxResults=100,
+                    serviceName=service_name,
+                )
 
-        if action == "list_tasks":
-            response = ecs_client.list_tasks(
-                cluster=cluster_name,
-                maxResults=100,
-                serviceName=service_name,
-            )
+            if action == "describe_tasks":
+                response = client.describe_tasks(
+                    cluster=cluster_name,
+                    tasks=[
+                        task_name,
+                    ],
+                )
 
-        if action == "describe_tasks":
-            response = ecs_client.describe_tasks(
-                cluster=cluster_name,
-                tasks=[
-                    task_name,
-                ],
-            )
+            if action == "describe_task_definition":
+                response = client.describe_task_definition(
+                    taskDefinition=task_definition_arn,
+                )
 
-        if action == "describe_task_definition":
-            response = ecs_client.describe_task_definition(
-                taskDefinition=task_definition_arn,
-            )
-
+        if resource == "secretsmanager":
+            return client
+        
     except Exception as Err:
         print(f"ERROR: {Err}")
         exit(-1)
