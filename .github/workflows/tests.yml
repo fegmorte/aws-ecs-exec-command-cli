@@ -23,7 +23,5 @@ jobs:
       - name: Lint with Ruff
         run: |
           pip install ruff
-          ruff --output-format=github .
-        with:
-          python-version: ${{ matrix.python-version }}          
+          ruff --output-format=github .      
         continue-on-error: true 
