@@ -1,16 +1,19 @@
-name: Release tag
+name: Python 🐍 Auto Version Tag
 
 on:
   push:
-    branches:
-      - master
+    branches: [master]
 
 jobs:
-  build:
+  tag:
     runs-on: ubuntu-latest
     steps:
-      - uses: planet-code/release-tag-action@1.1.0
+      - uses: actions/checkout@v2
+
+      - name: Version tag
+        uses: samamorgan/action-autotag-python@master
+
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          release-branch-format: "release\/"
-          show-changelog: true
+          path: pyproject.toml
+          variable: version
+          github_token: ${{ secrets.GITHUB_TOKEN }}
