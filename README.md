@@ -46,7 +46,7 @@ You should install the requirements via the pip install below.
 
 &nbsp;
 
-Create a virtualenv with python >= 3.7
+Create a virtualenv with python >= 3.9
 
 &nbsp;
 
