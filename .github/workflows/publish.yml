@@ -14,8 +14,6 @@ jobs:
   #   - add the dist to the release
   build-and-github-release: 
     name: Bump version, push tag and create GH release
-    needs:
-      - build
     runs-on: ubuntu-latest
 
     permissions:
@@ -99,7 +97,7 @@ jobs:
     name: >-
       Publish Python 🐍 distribution 📦 to PyPI
     needs:
-    - github-release
+    - build-and-github-release
     runs-on: ubuntu-latest
     environment:
       name: pypi
@@ -113,7 +111,7 @@ jobs:
       with:
         name: python-package-distributions
         path: dist/
-        
+
     - name: Publish distribution 📦 to PyPI
       uses: pypa/gh-action-pypi-publish@v1.8.11
       with:
