@@ -6,6 +6,8 @@ on:
       - master
 
 jobs:
+  # Build job for building python package
+  # store them in /dist
   build:
     name: Build distribution 📦
     runs-on: ubuntu-latest
@@ -29,7 +31,12 @@ jobs:
       with:
         name: python-package-distributions
         path: dist/
-    
+  
+  # Create github-release:
+  #   - generate tag
+  #   - generate Changelog
+  #   - create the release
+  #   - add the dist to the release
   github-release: 
     name: Bump version, push tag and create GH release
     needs:
@@ -41,7 +48,7 @@ jobs:
       id-token: write  # IMPORTANT: mandatory for sigstore
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: ${{ github.event.pull_request.merge_commit_sha }}
         fetch-depth: '0'    
@@ -84,6 +91,7 @@ jobs:
         '${{steps.generate_tag.outputs.new_tag}}' dist/**
         --repo '${{ github.repository }}'
 
+  # Publish package to PyPI
   publish-to-pypi:
     name: >-
       Publish Python 🐍 distribution 📦 to PyPI
