@@ -6,81 +6,93 @@ on:
       - master
 
 jobs:
-  
-  # Build and Create github-release:
-  #   - generate tag
-  #   - generate Changelog
-  #   - create the release
-  #   - add the dist to the release
-  build-and-github-release: 
+  # Generate tag and changelog
+  tag: 
     name: Bump version, push tag and create GH release
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: write  # IMPORTANT: mandatory for making GitHub Releases
-      id-token: write  # IMPORTANT: mandatory for sigstore
-
+    outputs:
+      new_tag: ${{ steps.generate_tag.outputs.new_tag }}
+      changelog: ${{ steps.build_changelog.outputs.changelog }}
     steps:
     - uses: actions/checkout@v4
       with:
         ref: ${{ github.event.pull_request.merge_commit_sha }}
-        fetch-depth: '0'  
-
+        fetch-depth: '0'    
     - name: Generate tag
       id: generate_tag
       uses: anothrNick/github-tag-action@1.67.0 # Don't use @master or @v1 unless you're happy to test the latest version
       env:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }} # if you don't want to set write permissions use a PAT token
         WITH_V: false
-
     - name: Build Changelog
       id: build_changelog
-      uses: mikepenz/release-changelog-builder-action@v4.1.1      
+      uses: mikepenz/release-changelog-builder-action@v4.1.1       
 
+  # Build job for building python package
+  # store them in /dist
+  build:
+    name: Build distribution 📦
+    needs:
+      - generate-tag
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: "3.x"
-
     - name: Install pypa/build
       run: >-
         python3 -m
         pip install
         build
         --user
-
     - name: Build a binary wheel and a source tarball
       run: python3 -m build
-
     - name: Store the distribution packages
       uses: actions/upload-artifact@v3
       with:
         name: python-package-distributions
-        path: dist/       
+        path: dist/
+  
+  # Create github-release:
+  #   - generate tag
+  #   - generate Changelog
+  #   - create the release
+  #   - add the dist to the release
+  github-release: 
+    name: Bump version, push tag and create GH release
+    needs:
+      - build
+      - tag
+    runs-on: ubuntu-latest
 
+    permissions:
+      contents: write  # IMPORTANT: mandatory for making GitHub Releases
+      id-token: write  # IMPORTANT: mandatory for sigstore
+
+    steps:   
     - name: Download all the dists
       uses: actions/download-artifact@v3
       with:
         name: python-package-distributions
         path: dist/
-
     - name: Sign the dists with Sigstore
       uses: sigstore/gh-action-sigstore-python@v1.2.3
       with:
         inputs: >-
           ./dist/*.tar.gz
           ./dist/*.whl
-
     - name: Create GitHub Release
       env:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       run: >-
         gh release create
-        '${{steps.generate_tag.outputs.new_tag}}'
-        --title '${{steps.generate_tag.outputs.new_tag}}'
+        '${{needs.tag.outputs.new_tag}}'
+        --title '${{needs.tag.outputs.new_tag}}'
         --repo '${{ github.repository }}'
-        --notes '${{steps.build_changelog.outputs.changelog}}'
-
+        --notes '${{needs.tag.outputs.changelog}}'
     - name: Upload artifact signatures to GitHub Release
       env:
         GITHUB_TOKEN: ${{ github.token }}
@@ -89,7 +101,7 @@ jobs:
       # sigstore-produced signatures and certificates.
       run: >-
         gh release upload
-        '${{steps.generate_tag.outputs.new_tag}}' dist/**
+        '${{needs.tag.outputs.new_tag}}' dist/**
         --repo '${{ github.repository }}'
 
   # Publish package to PyPI
@@ -97,7 +109,7 @@ jobs:
     name: >-
       Publish Python 🐍 distribution 📦 to PyPI
     needs:
-    - build-and-github-release
+    - github-release
     runs-on: ubuntu-latest
     environment:
       name: pypi
@@ -111,7 +123,6 @@ jobs:
       with:
         name: python-package-distributions
         path: dist/
-
     - name: Publish distribution 📦 to PyPI
       uses: pypa/gh-action-pypi-publish@v1.8.11
       with:
