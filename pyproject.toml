@@ -1,6 +1,6 @@
 [project]
 name = "ecs_connect_cli"
-version = "1.7.0"
+version = "1.6.2"
 authors = [
   { name="Frederic Egmorte", email="frederic.egmorte@gmail.com" },
 ]
