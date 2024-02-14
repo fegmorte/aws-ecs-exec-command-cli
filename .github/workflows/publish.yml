@@ -6,38 +6,13 @@ on:
       - master
 
 jobs:
-  # Build job for building python package
-  # store them in /dist
-  build:
-    name: Build distribution 📦
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.x"
-    - name: Install pypa/build
-      run: >-
-        python3 -m
-        pip install
-        build
-        --user
-    - name: Build a binary wheel and a source tarball
-      run: python3 -m build
-    - name: Store the distribution packages
-      uses: actions/upload-artifact@v3
-      with:
-        name: python-package-distributions
-        path: dist/
   
-  # Create github-release:
+  # Build and Create github-release:
   #   - generate tag
   #   - generate Changelog
   #   - create the release
   #   - add the dist to the release
-  github-release: 
+  build-and-github-release: 
     name: Bump version, push tag and create GH release
     needs:
       - build
@@ -51,27 +26,53 @@ jobs:
     - uses: actions/checkout@v4
       with:
         ref: ${{ github.event.pull_request.merge_commit_sha }}
-        fetch-depth: '0'    
+        fetch-depth: '0'  
+
     - name: Generate tag
       id: generate_tag
       uses: anothrNick/github-tag-action@1.67.0 # Don't use @master or @v1 unless you're happy to test the latest version
       env:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }} # if you don't want to set write permissions use a PAT token
         WITH_V: false
+
     - name: Build Changelog
       id: build_changelog
-      uses: mikepenz/release-changelog-builder-action@v4.1.1        
+      uses: mikepenz/release-changelog-builder-action@v4.1.1      
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.x"
+
+    - name: Install pypa/build
+      run: >-
+        python3 -m
+        pip install
+        build
+        --user
+
+    - name: Build a binary wheel and a source tarball
+      run: python3 -m build
+
+    - name: Store the distribution packages
+      uses: actions/upload-artifact@v3
+      with:
+        name: python-package-distributions
+        path: dist/       
+
     - name: Download all the dists
       uses: actions/download-artifact@v3
       with:
         name: python-package-distributions
         path: dist/
+
     - name: Sign the dists with Sigstore
       uses: sigstore/gh-action-sigstore-python@v1.2.3
       with:
         inputs: >-
           ./dist/*.tar.gz
           ./dist/*.whl
+
     - name: Create GitHub Release
       env:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }}
@@ -81,6 +82,7 @@ jobs:
         --title '${{steps.generate_tag.outputs.new_tag}}'
         --repo '${{ github.repository }}'
         --notes '${{steps.build_changelog.outputs.changelog}}'
+
     - name: Upload artifact signatures to GitHub Release
       env:
         GITHUB_TOKEN: ${{ github.token }}
@@ -111,6 +113,7 @@ jobs:
       with:
         name: python-package-distributions
         path: dist/
+        
     - name: Publish distribution 📦 to PyPI
       uses: pypa/gh-action-pypi-publish@v1.8.11
       with:

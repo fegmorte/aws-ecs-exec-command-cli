@@ -23,4 +23,4 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools-git-versioning]
 enabled = true
-starting_version = "1.6.3"
+starting_version = "1.6.5"
