@@ -52,7 +52,7 @@ Create a virtualenv with python >= 3.9
 
 ```bash
 source .venv_3.11.0/bin/activate
-pip install -r requirements.txt
+pip install ecs-connect-cli
 ```
 
 &nbsp;
@@ -85,6 +85,7 @@ Welcome in AWS ECS Exec command Cli !
 │ list-service                      List service(s) into a cluster                                                                           │
 │ list-task                         List task(s) into a service into a cluster                                                               │
 │ tail                              Tail logs of a selected  ECS container                                                                   │
+| update-secret                     Update secret from secret manager                                                                        |
 ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
 ```
