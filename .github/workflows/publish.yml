@@ -30,22 +30,10 @@ jobs:
         name: python-package-distributions
         path: dist/
     
-  generate-tag-changelog: 
-    name: Bump version and push tag
-    steps:
-    - name: Generate tag
-      id: generate_tag
-      uses: anothrNick/github-tag-action@1.64.0 # Don't use @master or @v1 unless you're happy to test the latest version
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_PAT }} # if you don't want to set write permissions use a PAT token
-        WITH_V: true
-
-  github-release:
-    name: >-
-      Sign the Python 🐍 distribution 📦 with Sigstore
-      and upload them to GitHub Release
+  github-release: 
+    name: Bump version, push tag and create GH release
     needs:
-    - publish-to-pypi
+      - build
     runs-on: ubuntu-latest
 
     permissions:
@@ -53,6 +41,15 @@ jobs:
       id-token: write  # IMPORTANT: mandatory for sigstore
 
     steps:
+    - name: Generate tag
+      id: generate_tag
+      uses: anothrNick/github-tag-action@1.64.0 # Don't use @master or @v1 unless you're happy to test the latest version
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }} # if you don't want to set write permissions use a PAT token
+        WITH_V: true
+    - name: Build Changelog
+      id: build_changelog
+      uses: mikepenz/release-changelog-builder-action@v4.1.1        
     - name: Download all the dists
       uses: actions/download-artifact@v3
       with:
@@ -69,9 +66,9 @@ jobs:
         GITHUB_TOKEN: ${{ github.token }}
       run: >-
         gh release create
-        '${{ github.ref_name }}'
+        '${{steps.generate_tag.outputs.new_tag}}'
         --repo '${{ github.repository }}'
-        --notes ""
+        --notes '${{steps.build_changelog.outputs.changelog}}'
     - name: Upload artifact signatures to GitHub Release
       env:
         GITHUB_TOKEN: ${{ github.token }}
@@ -80,7 +77,7 @@ jobs:
       # sigstore-produced signatures and certificates.
       run: >-
         gh release upload
-        '${{ github.ref_name }}' dist/**
+        '${{steps.generate_tag.outputs.new_tag}}' dist/**
         --repo '${{ github.repository }}'
 
   publish-to-pypi:
@@ -92,7 +89,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/<package-name>  # Replace <package-name> with your PyPI project name
+      url: https://pypi.org/p/ecs-connect-cli  # Replace <package-name> with your PyPI project name
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
 
