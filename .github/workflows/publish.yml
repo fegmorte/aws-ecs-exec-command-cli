@@ -14,17 +14,13 @@ jobs:
       new_tag: ${{ steps.generate_tag.outputs.new_tag }}
       changelog: ${{ steps.build_changelog.outputs.changelog }}
     steps:
-    - uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.pull_request.merge_commit_sha }}
-        fetch-depth: '0'    
+    - uses: actions/checkout@v4  
     - name: Generate tag
       id: generate_tag
       uses: anothrNick/github-tag-action@1.67.0 # Don't use @master or @v1 unless you're happy to test the latest version
       env:
         GITHUB_TOKEN: ${{ secrets.GH_PAT }} # if you don't want to set write permissions use a PAT token
         WITH_V: false
-        INITIAL_VERSION: "1.7.0"
     - name: Build Changelog
       id: build_changelog
       uses: mikepenz/release-changelog-builder-action@v4.1.1       
