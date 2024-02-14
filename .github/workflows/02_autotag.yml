@@ -14,7 +14,8 @@ jobs:
         uses: actions/checkout@master
         with:
           fetch-depth: '0'
-
+      - name: Add safe directory
+        run: git config --global --add safe.directory /github/workspace
       - name: Bump version and push tag
         uses: ChloePlanet/github-tag-action@master
         env:
