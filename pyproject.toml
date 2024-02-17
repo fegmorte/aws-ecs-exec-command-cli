@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ecs_connect_cli"
-version = "1.9.0"
+version = "0.0.0"
 description = "AWS ECS Cli tool for connecting to ecs container and update secret manager"
 authors = ["Frederic Egmorte <frederic.egmorte@gmail.com>"]
 license = "MIT License"

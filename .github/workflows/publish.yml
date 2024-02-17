@@ -58,8 +58,12 @@ jobs:
         with:
           path: ./.venv
           key: venv-${{ hashFiles('poetry.lock') }}
+      - name: Poetry dynamic versionning
+        run: |
+          poetry dynamic-versioning
       - name: Poetry build package
-        run: poetry build
+        run: |
+          poetry build
       - name: Store the distribution packages
         uses: actions/upload-artifact@v3
         with:
