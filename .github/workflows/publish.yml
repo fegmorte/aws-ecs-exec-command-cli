@@ -46,6 +46,9 @@ jobs:
           python-version: '3.9' 
       - name: Install poetry
         uses: abatilo/actions-poetry@v2
+      - name: Add poetry-dynamic-versioning
+        run: |      
+          poetry self add "poetry-dynamic-versioning[plugin]"          
       - name: Setup a local virtual environment (if no poetry.toml file)
         run: |
           poetry config virtualenvs.create true --local
@@ -131,6 +134,6 @@ jobs:
         name: python-package-distributions
         path: dist/
     - name: Publish distribution 📦 to PyPI
-      run: >-
+      run: |
         poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}
         poetry publish
