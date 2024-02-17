@@ -3,7 +3,7 @@ import os
 import json
 import hashlib
 from subprocess import call
-from ecs_connect.session import get_session
+from ecs_connect_cli.session import get_session
 from rich import print
 
 
@@ -16,7 +16,9 @@ def get_cluster_arn(profile: str) -> list:
     Returns:
         list: List of cluster(s) arn
     """
-    cluster_response = get_session(profile=profile, resource="ecs", action="list_clusters")
+    cluster_response = get_session(
+        profile=profile, resource="ecs", action="list_clusters"
+    )
 
     return cluster_response["clusterArns"]
 
@@ -32,7 +34,10 @@ def get_service_arn(profile: str, cluster_name: str) -> list:
         list: List of service(s) arn
     """
     service_response = get_session(
-        profile=profile, resource="ecs", cluster_name=cluster_name, action="list_services"
+        profile=profile,
+        resource="ecs",
+        cluster_name=cluster_name,
+        action="list_services",
     )
 
     return service_response["serviceArns"]
@@ -51,7 +56,7 @@ def get_task_arn(profile: str, cluster_name: str, service_name: str) -> list:
     """
     task_response = get_session(
         profile=profile,
-        resource="ecs", 
+        resource="ecs",
         cluster_name=cluster_name,
         service_name=service_name,
         action="list_tasks",
@@ -75,7 +80,7 @@ def get_container_name(profile: str, cluster_name: str, task_name: str) -> list:
 
     container_response = get_session(
         profile=profile,
-        resource="ecs", 
+        resource="ecs",
         cluster_name=cluster_name,
         task_name=task_name,
         action="describe_tasks",
@@ -101,7 +106,7 @@ def get_task_defintion_arn(profile: str, cluster_name: str, task_name: str) -> s
     """
     container_response = get_session(
         profile=profile,
-        resource="ecs", 
+        resource="ecs",
         cluster_name=cluster_name,
         task_name=task_name,
         action="describe_tasks",
@@ -122,7 +127,7 @@ def get_log_group(profile: str, container_name: str, task_definition_arn: str) -
     """
     log_group_response = get_session(
         profile=profile,
-        resource="ecs", 
+        resource="ecs",
         task_definition_arn=task_definition_arn,
         action="describe_task_definition",
     )
@@ -179,22 +184,26 @@ def get_secret_value(profile: str, secret_name: str) -> str:
 
     Args:
         profile (str): aws profile
-        secret_name (str): secret name 
-        
+        secret_name (str): secret name
+
     Returns:
         str: Value of the secret
-    """    
+    """
     client = get_session(
         profile=profile,
         resource="secretsmanager",
-        )    
+    )
     try:
         response = client.get_secret_value(SecretId=secret_name)
     except client.exceptions.ResourceNotFoundException:
-        print(f"ERROR: The secret: {secret_name} doesn't exist within your profile: {profile}")
-        print("HINT: Double check your credentials according the secret you want to update.")
-        exit(-1)   
-    
+        print(
+            f"ERROR: The secret: {secret_name} doesn't exist within your profile: {profile}"
+        )
+        print(
+            "HINT: Double check your credentials according the secret you want to update."
+        )
+        exit(-1)
+
     return response["SecretString"]
 
 
@@ -203,14 +212,14 @@ def edit_secret_value(secret_value: dict) -> str:
 
     Args:
         secret_value (str): secret string to update
-        
+
     Returns:
         str: Value of the secret
-    """    
+    """
     try:
         # Get the text editor from the shell, otherwise default to Vim
-        EDITOR = os.environ.get('EDITOR','vim')
-        
+        EDITOR = os.environ.get("EDITOR", "vim")
+
         with tempfile.NamedTemporaryFile(mode="w+", suffix=".tmp", delete=True) as tf:
 
             json.dump(secret_value, tf, sort_keys=True, indent=4)
@@ -222,40 +231,38 @@ def edit_secret_value(secret_value: dict) -> str:
             call([EDITOR, tf.name])
 
             # Reopen the file to read the edited data
-            with open(tf.name, 'r') as tf:
+            with open(tf.name, "r") as tf:
 
                 # Read the file data into a variable
                 edited_message = tf.read()
-                
+
                 # Return the data
                 final_file_md5 = md5(tf.name)
-                
+
                 return original_file_md5, final_file_md5, edited_message
-            
+
     except Exception as Err:
         print(f"ERROR: {Err}")
-        exit(-1)        
-        
-def update_secret_string(profile: str, secret_name: str, secret_string: str) -> str:     
+        exit(-1)
+
+
+def update_secret_string(profile: str, secret_name: str, secret_string: str) -> str:
     """Update secret string for the secret name
 
     Args:
         profile (str): aws profile
-        secret_name (str): secret name 
+        secret_name (str): secret name
         secret_string (str): secret string to update
-        
+
     Returns:
         str: Value of the secret
-    """    
+    """
     client = get_session(
         profile=profile,
         resource="secretsmanager",
-        )     
-    
-    response = client.update_secret(
-                SecretId=secret_name,
-                SecretString=secret_string
-            )
+    )
+
+    response = client.update_secret(SecretId=secret_name, SecretString=secret_string)
     return response
 
 

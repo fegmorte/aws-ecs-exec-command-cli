@@ -1,10 +1,10 @@
-from ecs_connect.credentials import check_credentials
-from ecs_connect.credentials import which_credentials
-from ecs_connect.credentials import which_region
-from ecs_connect.helpers import get_cluster_name
-from ecs_connect.helpers import get_container_name
-from ecs_connect.helpers import get_service_name
-from ecs_connect.helpers import get_task_arn
+from ecs_connect_cli.credentials import check_credentials
+from ecs_connect_cli.credentials import which_credentials
+from ecs_connect_cli.credentials import which_region
+from ecs_connect_cli.helpers import get_cluster_name
+from ecs_connect_cli.helpers import get_container_name
+from ecs_connect_cli.helpers import get_service_name
+from ecs_connect_cli.helpers import get_task_arn
 
 
 def make_choice(
@@ -56,6 +56,6 @@ def make_choice(
 
     # choose which region to use
     elif choice == "region_name":
-        list_results = which_region()    
+        list_results = which_region()
 
     return list_results

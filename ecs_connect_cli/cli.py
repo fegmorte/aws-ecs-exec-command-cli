@@ -6,16 +6,16 @@ import time
 import typer
 
 from echoprompt import EchoPrompt
-from ecs_connect import __app_name__, __version__
-from ecs_connect.menu import make_choice
-from ecs_connect.helpers import get_cluster_arn
-from ecs_connect.helpers import get_service_arn
-from ecs_connect.helpers import get_task_arn
-from ecs_connect.helpers import get_task_defintion_arn
-from ecs_connect.helpers import get_log_group
-from ecs_connect.helpers import get_secret_value
-from ecs_connect.helpers import edit_secret_value
-from ecs_connect.helpers import update_secret_string
+from ecs_connect_cli import __app_name__, __version__
+from ecs_connect_cli.menu import make_choice
+from ecs_connect_cli.helpers import get_cluster_arn
+from ecs_connect_cli.helpers import get_service_arn
+from ecs_connect_cli.helpers import get_task_arn
+from ecs_connect_cli.helpers import get_task_defintion_arn
+from ecs_connect_cli.helpers import get_log_group
+from ecs_connect_cli.helpers import get_secret_value
+from ecs_connect_cli.helpers import edit_secret_value
+from ecs_connect_cli.helpers import update_secret_string
 
 from deepdiff import DeepDiff
 from rich import print
@@ -141,7 +141,7 @@ def list_task():
 
 
 @app.command("connect")
-def ecs_connect():
+def ecs_connect_cli():
     """Connect to an ECS Fargate container"""
 
     try:
