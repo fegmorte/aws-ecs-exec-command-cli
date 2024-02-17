@@ -26,6 +26,8 @@ deepdiff = "^6.7.1"
 enable = true
 vcs = "git"
 pattern = "^((?P<epoch>\\d+)!)?(?P<base>\\d+(\\.\\d+)*)"
+latest-tag = true
+strict = true
 
 [build-system]
 requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
