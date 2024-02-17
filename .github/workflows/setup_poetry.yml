@@ -1,0 +1,28 @@
+on:
+  workflow_call
+
+jobs:
+  setup_poetry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0      
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'     
+      - name: Install poetry
+        uses: abatilo/actions-poetry@v2
+      - name: Add poetry-dynamic-versioning
+        run: |      
+          poetry self add "poetry-dynamic-versioning[plugin]"          
+      - name: Setup a local virtual environment (if no poetry.toml file)
+        run: |
+          poetry config virtualenvs.create true --local
+          poetry config virtualenvs.in-project true --local
+      - uses: actions/cache@v3
+        name: Define a cache for the virtual environment based on the dependencies lock file
+        with:
+          path: ./.venv
+          key: venv-${{ hashFiles('poetry.lock') }}
