@@ -57,6 +57,8 @@ jobs:
           key: venv-${{ hashFiles('poetry.lock') }}
       - name: Poetry build package
         run: poetry build
+      - name: Store the distribution packages
+        uses: actions/upload-artifact@v3
         with:
           name: python-package-distributions
           path: dist/
