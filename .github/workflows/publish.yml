@@ -6,9 +6,6 @@ on:
       - master
 
 jobs:
-  testwf:
-    uses: ./.github/workflows/setup_poetry.yml@master
-
   # Generate tag and changelog
   tag: 
     name: Push tag
@@ -40,8 +37,8 @@ jobs:
     needs:
       - tag
     runs-on: ubuntu-latest
-    uses: ./.github/workflows/setup_poetry.yml@master
     steps:
+      - uses: ./.github/workflows/setup_poetry.yml    
       - name: Poetry dynamic versionning
         run: |
           poetry dynamic-versioning
@@ -109,7 +106,6 @@ jobs:
     needs:
     - github-release
     runs-on: ubuntu-latest
-    uses: ./.github/workflows/setup_poetry.yml@master
     environment:
       name: pypi
       url: https://pypi.org/p/ecs-connect-cli  # Replace <package-name> with your PyPI project name
@@ -117,6 +113,7 @@ jobs:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
 
     steps:
+      - uses: ./.github/workflows/setup_poetry.yml
       - name: Download all the dists
         uses: actions/download-artifact@v3
         with:
