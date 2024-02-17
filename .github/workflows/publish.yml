@@ -134,11 +134,18 @@ jobs:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
 
     steps:
+    - name: Install poetry
+      uses: abatilo/actions-poetry@v2  
+    - uses: actions/cache@v3
+      name: Define a cache for the virtual environment based on the dependencies lock file
+      with:
+        path: ./.venv
+        key: venv-${{ hashFiles('poetry.lock') }}           
     - name: Download all the dists
       uses: actions/download-artifact@v3
       with:
         name: python-package-distributions
-        path: dist/
+        path: dist/     
     - name: Publish distribution 📦 to PyPI
       run: |
         poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}
