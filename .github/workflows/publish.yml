@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: fegmorte/aws-ecs-exec-command-cli/.github/workflow/setup_poetry.yml@master
+      - uses: .github/workflow/setup_poetry.yml@master
       - name: Poetry dynamic versionning
         run: |
           poetry dynamic-versioning
