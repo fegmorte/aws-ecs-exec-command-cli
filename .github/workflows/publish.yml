@@ -6,6 +6,12 @@ on:
       - master
 
 jobs:
+  testwf:
+    name: Test wf
+    runs-on: ubuntu-latest
+    steps:
+      - uses: .github/workflow/setup_poetry.yml@master
+
   # Generate tag and changelog
   tag: 
     name: Push tag
@@ -39,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: fegmorte/aws-ecs-exec-command-cli/.github/workflow/setup_poetry.yml@master
+      - uses: .github/workflow/setup_poetry.yml@master
       - name: Poetry dynamic versionning
         run: |
           poetry dynamic-versioning
