@@ -7,7 +7,7 @@ on:
 
 jobs:
   testwf:
-    uses: .github/workflow/setup_poetry.yml@master
+    uses: ./.github/workflow/setup_poetry.yml@master
 
   # Generate tag and changelog
   tag: 
@@ -40,7 +40,7 @@ jobs:
     needs:
       - tag
     runs-on: ubuntu-latest
-    uses: .github/workflow/setup_poetry.yml@master
+    uses: ./.github/workflow/setup_poetry.yml@master
     steps:
       - name: Poetry dynamic versionning
         run: |
@@ -109,7 +109,7 @@ jobs:
     needs:
     - github-release
     runs-on: ubuntu-latest
-    uses: .github/workflow/setup_poetry.yml@master
+    uses: ./.github/workflow/setup_poetry.yml@master
     environment:
       name: pypi
       url: https://pypi.org/p/ecs-connect-cli  # Replace <package-name> with your PyPI project name
