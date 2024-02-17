@@ -7,10 +7,7 @@ on:
 
 jobs:
   testwf:
-    name: Test wf
-    runs-on: ubuntu-latest
-    steps:
-      - uses: .github/workflow/setup_poetry.yml@master
+    uses: fegmorte/aws-ecs-exec-command-cli/.github/workflow/setup_poetry.yml@master
 
   # Generate tag and changelog
   tag: 
@@ -43,9 +40,8 @@ jobs:
     needs:
       - tag
     runs-on: ubuntu-latest
-
+    uses: fegmorte/aws-ecs-exec-command-cli/.github/workflow/setup_poetry.yml@master
     steps:
-      - uses: .github/workflow/setup_poetry.yml@master
       - name: Poetry dynamic versionning
         run: |
           poetry dynamic-versioning
@@ -113,6 +109,7 @@ jobs:
     needs:
     - github-release
     runs-on: ubuntu-latest
+    uses: fegmorte/aws-ecs-exec-command-cli/.github/workflow/setup_poetry.yml@master  
     environment:
       name: pypi
       url: https://pypi.org/p/ecs-connect-cli  # Replace <package-name> with your PyPI project name
@@ -120,7 +117,6 @@ jobs:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
 
     steps:
-      - uses: fegmorte/aws-ecs-exec-command-cli/.github/workflow/setup_poetry.yml@master  
       - name: Download all the dists
         uses: actions/download-artifact@v3
         with:
