@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: fegmorte/aws-ecs-exec-command-cli/.github/workflow/setup_poetry.yml
+      - uses: fegmorte/aws-ecs-exec-command-cli/.github/workflow/setup_poetry.yml@master
       - name: Poetry dynamic versionning
         run: |
           poetry dynamic-versioning
@@ -114,7 +114,7 @@ jobs:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
 
     steps:
-      - uses: fegmorte/aws-ecs-exec-command-cli/.github/workflow/setup_poetry.yml       
+      - uses: fegmorte/aws-ecs-exec-command-cli/.github/workflow/setup_poetry.yml@master  
       - name: Download all the dists
         uses: actions/download-artifact@v3
         with:
