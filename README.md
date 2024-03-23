@@ -25,7 +25,7 @@ At start, you are asked what kind of credentials you want to use and which defau
 You can now also update your secret directly from the command line.
 
 ```bash
-❯ python -m ecs_connect update-secret your-secret-name
+❯ python -m ecs_connect_cli update-secret your-secret-name
 ```
 
 &nbsp;
@@ -64,7 +64,7 @@ if it is the first time you connect to aws-cli, you have to get credentials key 
 ## Usage
 
 ```bash
-❯ python -m ecs_connect --help
+❯ python -m ecs_connect_cli --help
 
 
 Welcome in AWS ECS Exec command Cli !
