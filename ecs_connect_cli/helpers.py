@@ -207,7 +207,7 @@ def get_secret_value(profile: str, secret_name: str) -> str:
     return response["SecretString"]
 
 
-def edit_secret_value(secret_value: dict) -> str:
+def edit_secret_value(secret_value: dict, type: str) -> str:
     """Edit the secret value
 
     Args:
@@ -221,8 +221,12 @@ def edit_secret_value(secret_value: dict) -> str:
         EDITOR = os.environ.get("EDITOR", "vim")
 
         with tempfile.NamedTemporaryFile(mode="w+", suffix=".tmp", delete=True) as tf:
-
-            json.dump(secret_value, tf, sort_keys=True, indent=4)
+            
+            if type == "json":
+                json.dump(secret_value, tf, sort_keys=True, indent=4)
+            elif type == "string":
+                tf.write(secret_value)
+                
             # Flush the I/O buffer to make sure the data is written to the file
             tf.flush()
 
@@ -272,3 +276,10 @@ def md5(fname):
         for chunk in iter(lambda: f.read(4096), b""):
             hash_md5.update(chunk)
     return hash_md5.hexdigest()
+
+def is_json(myjson):
+  try:
+    json.loads(myjson)
+  except ValueError as e:
+    return False
+  return True

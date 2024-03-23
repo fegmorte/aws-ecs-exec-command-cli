@@ -16,6 +16,7 @@ from ecs_connect_cli.helpers import get_log_group
 from ecs_connect_cli.helpers import get_secret_value
 from ecs_connect_cli.helpers import edit_secret_value
 from ecs_connect_cli.helpers import update_secret_string
+from ecs_connect_cli.helpers import is_json
 
 from deepdiff import DeepDiff
 from rich import print
@@ -387,15 +388,24 @@ def update_secret(secret_name: Annotated[str, typer.Argument()]):
         initial_secret_value = get_secret_value(
             profile=profile_name, secret_name=secret_name
         )
-
+        
         # Edit the secret value as a temporary file
-        try:
-            original_file_md5, final_file_md5, updated_secret_string = (
-                edit_secret_value(secret_value=json.loads(initial_secret_value))
-            )
-        except Exception as Err:
-            print(f"ERROR: {Err}")
-            exit(-1)
+        if is_json(initial_secret_value):
+            try:
+                original_file_md5, final_file_md5, updated_secret_string = (
+                    edit_secret_value(secret_value=json.loads(initial_secret_value),type="json")
+                )
+            except Exception as Err:
+                print(f"ERROR: {Err}")
+                exit(-1)
+        else:
+            try:
+                original_file_md5, final_file_md5, updated_secret_string = (
+                    edit_secret_value(initial_secret_value, type="string")
+                )
+            except Exception as Err:
+                print(f"ERROR: {Err}")
+                exit(-1)
 
         # Check if the file has been modified.
         if original_file_md5 != final_file_md5:

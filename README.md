@@ -70,7 +70,7 @@ if it is the first time you connect to aws-cli, you have to get credentials key 
 Welcome in AWS ECS Exec command Cli !
 
                                                                                                                                                                                        
- Usage: ecs_connect [OPTIONS] COMMAND [ARGS]...                                                                                                                                        
+ Usage: ecs_connect_cli [OPTIONS] COMMAND [ARGS]...                                                                                                                                        
                                                                                                                                                                                        
 ╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ --version             -v        Show the application's version and exit.                                                                   │
