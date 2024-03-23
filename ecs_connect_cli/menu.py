@@ -55,7 +55,7 @@ def make_choice(
         list_results = which_credentials()
 
     # choose which region to use
-    elif choice == "region_name":
+    elif choice == "region":
         list_results = which_region()
 
     return list_results
