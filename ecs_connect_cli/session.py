@@ -28,9 +28,9 @@ def get_session(
             session = boto3.Session()
         else:
             session = boto3.Session(profile_name=profile)
-        
+
         client = session.client(resource)
-        
+
         if resource == "ecs":
             if action == "list_clusters":
                 response = client.list_clusters(maxResults=20)
@@ -64,7 +64,7 @@ def get_session(
 
         if resource == "secretsmanager":
             return client
-        
+
     except Exception as Err:
         print(f"ERROR: {Err}")
         exit(-1)

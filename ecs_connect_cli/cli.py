@@ -388,12 +388,14 @@ def update_secret(secret_name: Annotated[str, typer.Argument()]):
         initial_secret_value = get_secret_value(
             profile=profile_name, secret_name=secret_name
         )
-        
+
         # Edit the secret value as a temporary file
         if is_json(initial_secret_value):
             try:
                 original_file_md5, final_file_md5, updated_secret_string = (
-                    edit_secret_value(secret_value=json.loads(initial_secret_value),type="json")
+                    edit_secret_value(
+                        secret_value=json.loads(initial_secret_value), type="json"
+                    )
                 )
             except Exception as Err:
                 print(f"ERROR: {Err}")
