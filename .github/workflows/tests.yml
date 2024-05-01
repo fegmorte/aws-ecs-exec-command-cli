@@ -13,15 +13,10 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install poetry
-        uses: abatilo/actions-poetry@v2
-      - name: Add poetry-dynamic-versioning
-        run: |      
-          poetry self add "poetry-dynamic-versioning[plugin]"          
-      - name: Setup a local virtual environment (if no poetry.toml file)
+      - name: Install dependencies
         run: |
-          poetry config virtualenvs.create true --local
-          poetry config virtualenvs.in-project true --local 
+          python -m pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt       
       - name: Lint with Ruff
         run: |
           pip install ruff
