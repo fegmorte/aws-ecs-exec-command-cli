@@ -17,7 +17,7 @@ The `aws ecs execute-command` command is quite complicated to remember and the t
 
 To let you choose which one you want to connect into.
 
-**Enhancements :sunglasses: ** 
+**Enhancements** :sunglasses:
 You can now connect to ECS and tail your logs from an EC2 instance or AWS CloudShell without the need of aws cli and aws credentials file.
 
 At start, you are asked what kind of credentials you want to use and which default region.
