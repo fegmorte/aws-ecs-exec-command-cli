@@ -13,7 +13,7 @@ classifiers = [
 repository = "https://github.com/fegmorte/aws-ecs-exec-command-cli"
 
 [tool.poetry.scripts]
-ecs-connect-cli = "ecs_connect_cli.main:app
+ecs-connect-cli = "ecs_connect_cli.main:app"
 
 [tool.poetry.dependencies]
 python = "^3.9"
