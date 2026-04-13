@@ -39,7 +39,6 @@ def get_session(
                 response = client.list_services(
                     cluster=cluster_name,
                     maxResults=50,
-                    launchType="FARGATE",
                 )
 
             if action == "list_tasks":
