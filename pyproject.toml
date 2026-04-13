@@ -19,6 +19,7 @@ ecs-connect-cli = "ecs_connect_cli.cli:app"
 python = "^3.9"
 boto3 = "^1.26.13"
 typer = {version = "^0.9.0", extras = ["all"]}
+click = ">=8.0.0,<8.2.0"
 pytest = "^6.2.4"
 echoprompt = "^0.2.0"
 deepdiff = "^6.7.1"
