@@ -30,7 +30,8 @@ def test_root_help():
 
 def test_exec_command_requires_command_option():
     result = runner.invoke(cli.app, ["exec-command"])
-    output = ANSI_ESCAPE_RE.sub("", result.stdout)
+    raw_output = f"{result.stdout}\n{result.stderr}"
+    output = ANSI_ESCAPE_RE.sub("", raw_output)
     assert result.exit_code != 0
     assert "Missing option" in output
     assert "--command" in output

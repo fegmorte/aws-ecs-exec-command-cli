@@ -115,7 +115,7 @@ The project now contains two test layers:
 
 ### Local setup
 
-Use a Python version supported by this project (3.9 to 3.12).
+Use a Python version supported by this project (3.9 to 3.14).
 
 ```bash
 python3 -m venv .venv
