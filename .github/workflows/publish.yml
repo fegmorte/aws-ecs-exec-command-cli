@@ -1,13 +1,13 @@
 name: Publish Python 🐍 distribution 📦 to PyPI and TestPyPI
 
-on: 
+on:
   push:
     branches:
       - master
 
 jobs:
   # Generate tag and changelog
-  tag: 
+  tag:
     name: Push tag
     runs-on: ubuntu-latest
     outputs:
@@ -16,19 +16,19 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           ref: ${{ github.event.pull_request.merge_commit_sha }}
           fetch-depth: '0'
       - name: Generate tag
         id: generate_tag
-        uses: anothrNick/github-tag-action@1.64.0 # Don't use @master or @v1 unless you're happy to test the latest version
+        uses: anothrNick/github-tag-action@4ed44965e0db8dab2b466a16da04aec3cc312fd8 # v1.75.0 # Don't use @master or @v1 unless you're happy to test the latest version
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }} # if you don't want to set write permissions use a PAT token
           WITH_V: false
       - name: Build Changelog
         id: build_changelog
-        uses: mikepenz/release-changelog-builder-action@v4.1.1       
+        uses: mikepenz/release-changelog-builder-action@bcae7115752d4ed746ff92feb666574428a79415 # v6.2.1
 
   # Build job for building python package
   # store them in /dist
@@ -38,23 +38,23 @@ jobs:
       - tag
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
-          fetch-depth: 0      
+          fetch-depth: 0
       - name: Install Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
-          python-version: '3.9'     
+          python-version: '3.9'
       - name: Install poetry
-        uses: abatilo/actions-poetry@v2
+        uses: abatilo/actions-poetry@3765cf608f2d4a72178a9fc5b918668e542b89b1 # v4.0.0
       - name: Add poetry-dynamic-versioning
-        run: |      
-          poetry self add "poetry-dynamic-versioning[plugin]"          
+        run: |
+          poetry self add "poetry-dynamic-versioning[plugin]"
       - name: Setup a local virtual environment (if no poetry.toml file)
         run: |
           poetry config virtualenvs.create true --local
           poetry config virtualenvs.in-project true --local
-      - uses: actions/cache@v3
+      - uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         name: Define a cache for the virtual environment based on the dependencies lock file
         with:
           path: ./.venv
@@ -66,17 +66,17 @@ jobs:
         run: |
           poetry build
       - name: Store the distribution packages
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: python-package-distributions
           path: dist/
-  
+
   # Create github-release:
   #   - generate tag
   #   - generate Changelog
   #   - create the release
   #   - add the dist to the release
-  github-release: 
+  github-release:
     name: Create GH release
     needs:
       - build
@@ -87,14 +87,14 @@ jobs:
       contents: write  # IMPORTANT: mandatory for making GitHub Releases
       id-token: write  # IMPORTANT: mandatory for sigstore
 
-    steps:   
+    steps:
       - name: Download all the dists
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: python-package-distributions
           path: dist/
       - name: Sign the dists with Sigstore
-        uses: sigstore/gh-action-sigstore-python@v1.2.3
+        uses: sigstore/gh-action-sigstore-python@04cffa1d795717b140764e8b640de88853c92acc # v3.3.0
         with:
           inputs: >-
             ./dist/*.tar.gz
@@ -133,32 +133,32 @@ jobs:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
-          fetch-depth: 0      
+          fetch-depth: 0
       - name: Install Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
-          python-version: '3.9'     
+          python-version: '3.9'
       - name: Install poetry
-        uses: abatilo/actions-poetry@v2
+        uses: abatilo/actions-poetry@3765cf608f2d4a72178a9fc5b918668e542b89b1 # v4.0.0
       - name: Add poetry-dynamic-versioning
-        run: |      
-          poetry self add "poetry-dynamic-versioning[plugin]"          
+        run: |
+          poetry self add "poetry-dynamic-versioning[plugin]"
       - name: Setup a local virtual environment (if no poetry.toml file)
         run: |
           poetry config virtualenvs.create true --local
           poetry config virtualenvs.in-project true --local
-      - uses: actions/cache@v3
+      - uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         name: Define a cache for the virtual environment based on the dependencies lock file
         with:
           path: ./.venv
           key: venv-${{ hashFiles('poetry.lock') }}
       - name: Download all the dists
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: python-package-distributions
-          path: dist/     
+          path: dist/
       - name: Publish distribution 📦 to PyPI
         run: |
           poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}
