@@ -16,7 +16,7 @@ repository = "https://github.com/fegmorte/aws-ecs-exec-command-cli"
 ecs-connect-cli = "ecs_connect_cli.cli:app"
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.15"
+python = ">=3.10,<3.15"
 boto3 = "^1.26.13"
 typer = "^0.16.0"
 click = ">=8.2.0,<8.3.0"
