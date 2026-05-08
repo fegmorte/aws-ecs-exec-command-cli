@@ -54,7 +54,7 @@ def list_cluster():
         for cluster_arn in get_cluster_arn(profile_name):
             print(f"[green]{cluster_arn}[/green]")
 
-    except (KeyboardInterrupt, TypeError) as e:
+    except (KeyboardInterrupt, TypeError):
         print("Bye bye !")
         sys.exit()
 
@@ -91,7 +91,7 @@ def list_service():
         for service_arn in get_service_arn(profile_name, cluster_name):
             print(f"[green]{service_arn}[/green]")
 
-    except (KeyboardInterrupt, TypeError) as e:
+    except (KeyboardInterrupt, TypeError):
         print("Bye bye !")
         sys.exit()
 
@@ -136,7 +136,7 @@ def list_task():
         ):
             print(f"[green]{task_arn}[/green]")
 
-    except (KeyboardInterrupt, TypeError) as e:
+    except (KeyboardInterrupt, TypeError):
         print("Bye bye !")
         sys.exit()
 
@@ -204,7 +204,7 @@ def ecs_connect_cli():
 
         subprocess.run(command, shell=True)
 
-    except (KeyboardInterrupt, TypeError) as e:
+    except (KeyboardInterrupt, TypeError):
         print("Bye bye !")
         sys.exit()
 
@@ -280,7 +280,7 @@ def tail_logs():
 
         subprocess.run(command, shell=True)
 
-    except (KeyboardInterrupt, TypeError) as e:
+    except (KeyboardInterrupt, TypeError):
         print("Bye bye !")
         sys.exit()
 
@@ -352,10 +352,10 @@ def exec_command(
             command = f"{command} > {output_filename}"
         subprocess.run(command, shell=True)
 
-    except (KeyboardInterrupt, TypeError) as e:
+    except (KeyboardInterrupt, TypeError):
         try:
             time.sleep(2)
-        except (KeyboardInterrupt, TypeError) as e:
+        except (KeyboardInterrupt, TypeError):
             print("Bye bye !")
             sys.exit()
         else:
@@ -431,10 +431,10 @@ def update_secret(secret_name: Annotated[str, typer.Argument()]):
         else:
             print(f"The secret {secret_name} has not been updated.")
 
-    except (KeyboardInterrupt, TypeError) as e:
+    except (KeyboardInterrupt, TypeError):
         try:
             time.sleep(2)
-        except (KeyboardInterrupt, TypeError) as e:
+        except (KeyboardInterrupt, TypeError):
             print("Bye bye !")
             sys.exit()
         else:
