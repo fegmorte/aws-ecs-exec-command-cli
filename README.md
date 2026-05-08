@@ -106,6 +106,57 @@ Welcome in AWS ECS Exec command Cli !
 
 &nbsp;
 
+## Testing
+
+The project now contains two test layers:
+
+- unit tests (fast, mocked CLI/AWS boundaries)
+- integration tests (real boto3 calls against MiniStack)
+
+### Local setup
+
+Use a Python version supported by this project (3.9 to 3.12).
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Run unit tests
+
+```bash
+pytest -m "not integration" -q
+```
+
+### Run integration tests with MiniStack
+
+Start MiniStack:
+
+```bash
+docker run --rm -p 4566:4566 ministackorg/ministack
+```
+
+Run integration tests in another terminal:
+
+```bash
+export AWS_ACCESS_KEY_ID=test
+export AWS_SECRET_ACCESS_KEY=test
+export AWS_DEFAULT_REGION=us-east-1
+export ECS_CONNECT_AWS_ENDPOINT_URL=http://localhost:4566
+pytest -m "integration" -q
+```
+
+You can also use `AWS_ENDPOINT_URL` instead of `ECS_CONNECT_AWS_ENDPOINT_URL`.
+
+### Run all tests
+
+```bash
+pytest -q
+```
+
+&nbsp;
+
 Thanks to Typer from [@tiangolo](https://typer.tiangolo.com/)
 
 Thanks to [@kraymer](https://github.com/kraymer) for echoprompt :sunglasses:

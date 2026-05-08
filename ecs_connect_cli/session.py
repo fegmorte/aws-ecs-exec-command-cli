@@ -1,3 +1,5 @@
+import os
+
 import boto3
 
 
@@ -29,7 +31,14 @@ def get_session(
         else:
             session = boto3.Session(profile_name=profile)
 
-        client = session.client(resource)
+        endpoint_url = os.getenv("ECS_CONNECT_AWS_ENDPOINT_URL") or os.getenv(
+            "AWS_ENDPOINT_URL"
+        )
+        client_kwargs = {}
+        if endpoint_url:
+            client_kwargs["endpoint_url"] = endpoint_url
+
+        client = session.client(resource, **client_kwargs)
 
         if resource == "ecs":
             if action == "list_clusters":

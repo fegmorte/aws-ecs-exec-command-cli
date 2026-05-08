@@ -1,10 +1,10 @@
-# tests/test_ecs_connect.py
-
 from typer.testing import CliRunner
 
-from ecs_connect import __app_name__, __version__, cli
+from ecs_connect_cli import __app_name__, __version__
+from ecs_connect_cli import cli
 
 runner = CliRunner()
+
 
 def test_version():
     result = runner.invoke(cli.app, ["--version"])
