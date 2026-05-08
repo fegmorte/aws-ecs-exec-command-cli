@@ -1,6 +1,7 @@
 import os
 import re
 
+import pytest
 from typer.testing import CliRunner
 
 from ecs_connect_cli import cli
@@ -26,6 +27,14 @@ def test_root_help():
     assert result.exit_code == 0
     assert "Show the application's version and exit." in result.stdout
     assert "exec-command" in result.stdout
+
+
+def test_help_via_direct_app_call_regression_for_pipx_issue():
+    # Mirrors the pipx-generated console script behavior: sys.exit(app()).
+    with pytest.raises(SystemExit) as exc:
+        cli.app(args=["--help"], prog_name="ecs-connect-cli")
+
+    assert exc.value.code == 0
 
 
 def test_exec_command_requires_command_option():

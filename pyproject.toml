@@ -17,7 +17,7 @@ ecs-connect-cli = "ecs_connect_cli.cli:app"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.15"
-boto3 = "^1.26.13"
+boto3 = "^1.43.6"
 typer = "^0.16.0"
 click = ">=8.2.0,<8.3.0"
 pytest = "^8.3.5"
