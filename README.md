@@ -25,12 +25,12 @@ At start, you are asked what kind of credentials you want to use and which defau
 You can now also update your secret directly from the command line.
 
 ```bash
-❯ ecs-connect-cli update-secret your-secret-name
+ecs-connect-cli update-secret your-secret-name
 ```
 
 I also add the possibility to run directly with pipx 
 ```bash
-❯ pipx run ecs-connect-cli --help
+pipx run ecs-connect-cli --help
 ```
 
 
@@ -52,18 +52,18 @@ To install you have several options:
 
 - Install it globally with your pip:
 ```bash
-❯ pip install ecs-connect-cli
+pip install ecs-connect-cli
 ```
 
 - Install it into a virtualenv (after creating a virtualenv with the tool of your choice):
 ```bash
-❯ source .venv_3.11.0/bin/activate
-❯ pip install ecs-connect-cli
+source .venv_3.11.0/bin/activate
+pip install ecs-connect-cli
 ```
 
 - Run the cli directly with [pipx](https://pipx.pypa.io/latest/)
 ```bash
-❯ pipx run ecs-connect-cli --help
+pipx run ecs-connect-cli --help
 ```
 
 
@@ -78,7 +78,7 @@ if it is the first time you connect to aws-cli, you have to get credentials key 
 If you use it with with pip, you can call the CLI as below or directly call it with pipx
 
 ```bash
-❯ ecs-connect-cli --help
+ecs-connect-cli --help
 
 
 Welcome in AWS ECS Exec command Cli !
