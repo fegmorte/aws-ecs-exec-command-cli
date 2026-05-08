@@ -1,10 +1,12 @@
 import os
+import re
 
 from typer.testing import CliRunner
 
 from ecs_connect_cli import cli
 
 runner = CliRunner()
+ANSI_ESCAPE_RE = re.compile(r"\x1b\[[0-9;]*m")
 
 
 def _fake_make_choice(choice, profile=None, cluster_name=None, service_name=None, task_name=None):
@@ -28,8 +30,10 @@ def test_root_help():
 
 def test_exec_command_requires_command_option():
     result = runner.invoke(cli.app, ["exec-command"])
+    output = ANSI_ESCAPE_RE.sub("", result.stdout)
     assert result.exit_code != 0
-    assert "Missing option '--command'" in result.stdout
+    assert "Missing option" in output
+    assert "--command" in output
 
 
 def test_connect_builds_expected_command_with_profile(monkeypatch):
